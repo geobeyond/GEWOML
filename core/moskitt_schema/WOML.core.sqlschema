@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SQLSchema:Database xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SQLConstraints="http:///org/eclipse/datatools/modelbase/sql/constraints.ecore" xmlns:SQLDataTypes="http:///org/eclipse/datatools/modelbase/sql/datatypes.ecore" xmlns:SQLSchema="http:///org/eclipse/datatools/modelbase/sql/schema.ecore" xmlns:SQLTables="http:///org/eclipse/datatools/modelbase/sql/tables.ecore" xmi:id="_xBmtwAnqEeGJx4aEEEuh8g" name="Database" vendor="Generic JDBC" version="1.0">
+  <schemas xmi:id="_xBmtwQnqEeGJx4aEEEuh8g" name="Schema">
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_-IxtcAnsEeGJx4aEEEuh8g" name="AbstractMeteorologicalObjectType">
+      <eAnnotations xmi:id="_-IxtcQnsEeGJx4aEEEuh8g" source="AdditionalAttributes">
+        <details xmi:id="_-IxtcgnsEeGJx4aEEEuh8g" key="Generated" value="false"/>
+      </eAnnotations>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_pR6jkAn9EeGolJbdKEf7lw" name="UncertaintyArea">
+      <eAnnotations xmi:id="_pR9m4An9EeGolJbdKEf7lw" source="AdditionalAttributes">
+        <details xmi:id="_pR-N8An9EeGolJbdKEf7lw" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_O5xgQAn_EeGolJbdKEf7lw" name="id" nullable="false">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_XIktsAn_EeGolJbdKEf7lw" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <constraints xsi:type="SQLConstraints:PrimaryKey" xmi:id="_bjVo0An_EeGolJbdKEf7lw" name="PK_UncertaintyArea" members="_O5xgQAn_EeGolJbdKEf7lw"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_R-gAEAoAEeGolJbdKEf7lw" name="TimeInterpolation">
+      <eAnnotations xmi:id="_R-gnIAoAEeGolJbdKEf7lw" source="AdditionalAttributes">
+        <details xmi:id="_R-gnIQoAEeGolJbdKEf7lw" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_S5oyoAoAEeGolJbdKEf7lw" name="id" nullable="false"/>
+      <columns xmi:id="_TI6kwAoAEeGolJbdKEf7lw" name="StandardObjectProperties">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_geftsAofEeGolJbdKEf7lw" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <columns xmi:id="_TZ5AAAoAEeGolJbdKEf7lw" name="method" nullable="false">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_F5XMsAogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_DhmrIAogEeGolJbdKEf7lw" name="maxResolution">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_uc-TYAoiEeG74-oo8e12zg" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_bKDJoAoAEeGolJbdKEf7lw" name="StandardObjectProperties">
+      <eAnnotations xmi:id="_bKDwsAoAEeGolJbdKEf7lw" source="AdditionalAttributes">
+        <details xmi:id="_bKDwsQoAEeGolJbdKEf7lw" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_bznEAAoAEeGolJbdKEf7lw" name="Column1"/>
+      <columns xmi:id="_cLOSwAoAEeGolJbdKEf7lw" name="Column2"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_-v564AoYEeGolJbdKEf7lw" name="MeteorologicalObjectMetaDataPropertyType">
+      <eAnnotations xmi:id="_-v6h8AoYEeGolJbdKEf7lw" source="AdditionalAttributes">
+        <details xmi:id="_-v6h8QoYEeGolJbdKEf7lw" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_DskpMAoZEeGolJbdKEf7lw" name="MeteorologicalObjectMetaData">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_Lpte4AoZEeGolJbdKEf7lw" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_p8u30AohEeG74-oo8e12zg" name="maxResolution">
+      <eAnnotations xmi:id="_p8zJQAohEeG74-oo8e12zg" source="AdditionalAttributes">
+        <details xmi:id="_p8zJQQohEeG74-oo8e12zg" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_SnQwwAoiEeG74-oo8e12zg" name="id" nullable="false">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_VCF0cAoiEeG74-oo8e12zg" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <columns xmi:id="_rpy2kAohEeG74-oo8e12zg" name="unit" nullable="false">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_Frfd4AoiEeG74-oo8e12zg" name="Varchar" primitiveType="CHARACTER_VARYING" length="16"/>
+      </columns>
+      <columns xmi:id="_sQhfYAohEeG74-oo8e12zg" name="radix">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_NyfaMAoiEeG74-oo8e12zg" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <columns xmi:id="_sVXjIAohEeG74-oo8e12zg" name="factor">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_RQlRsAoiEeG74-oo8e12zg" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <columns xmi:id="_kRYE8AuJEeGmU6ctD4RaXQ" name="decimal">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_pwG-gAuJEeGmU6ctD4RaXQ" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <constraints xsi:type="SQLConstraints:PrimaryKey" xmi:id="_YZTA0AoiEeG74-oo8e12zg" name="PK_TimeIntervalLength" members="_SnQwwAoiEeG74-oo8e12zg"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_qau30ArkEeG9kZJHPuHtpQ" name="AssociationAttributeGroup">
+      <eAnnotations xmi:id="_qaxUEArkEeG9kZJHPuHtpQ" source="AdditionalAttributes">
+        <details xmi:id="_qaxUEQrkEeG9kZJHPuHtpQ" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="__Y-ssA6wEeGJ9YNpb5W1mw" name="DEPRECATED ????"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_FKrS4QuuEeGd_bl2EJFKBw" name="ApprovedMeteorologicalObjectCollection" referencingForeignKeys="__ArowA9xEeGyOeTuyf9OHA _YAnREA9yEeGyOeTuyf9OHA">
+      <eAnnotations xmi:id="_FK1D4AuuEeGd_bl2EJFKBw" source="AdditionalAttributes">
+        <details xmi:id="_FK1D4QuuEeGd_bl2EJFKBw" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_cBLfgQ0tEeGA9YZquMf4XA" name="id_AMOC" nullable="false">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_d0U4IA0tEeGA9YZquMf4XA" name="Integer" primitiveType="INTEGER"/>
+        <identitySpecifier xmi:id="_QnmcIA9yEeGyOeTuyf9OHA" startValue="0"/>
+      </columns>
+      <columns xmi:id="_qAcvYA0wEeGA9YZquMf4XA" name="id_MOC">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_sawOoA0wEeGA9YZquMf4XA" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <constraints xsi:type="SQLConstraints:PrimaryKey" xmi:id="_XlZwYA0wEeGA9YZquMf4XA" name="PK_ApprovedMeteorologicalObjectCollection" members="_cBLfgQ0tEeGA9YZquMf4XA"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_ePg38A0wEeGA9YZquMf4XA" name="MeteorologicalObjectCollection" members="_qAcvYA0wEeGA9YZquMf4XA" referencedMembers="_SZEOYA0wEeGA9YZquMf4XA" referencedTable="_lDgFoAuuEeGd_bl2EJFKBw"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_iWwwEA9zEeGyOeTuyf9OHA" name="ForeignKey1" members="_cBLfgQ0tEeGA9YZquMf4XA" referencedMembers="_SPGwAA9zEeGyOeTuyf9OHA" referencedTable="_N8S3AA9zEeGyOeTuyf9OHA"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_GykdwAuuEeGd_bl2EJFKBw" name="WeatherForecast">
+      <eAnnotations xmi:id="_GylE0AuuEeGd_bl2EJFKBw" source="AdditionalAttributes">
+        <details xmi:id="_GylE0QuuEeGd_bl2EJFKBw" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_YmRCcA7bEeGXffjN-SIVYg" name="id_WF"/>
+      <columns xmi:id="_AnkHAA9yEeGyOeTuyf9OHA" name="id_AMOC" nullable="false">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_XA-ZAA9yEeGyOeTuyf9OHA" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <columns xmi:id="_J3j80A-gEeGyOeTuyf9OHA" name="id_tR"/>
+      <columns xmi:id="_4Tld0A-hEeGyOeTuyf9OHA" name="forecastTime" nullable="false"/>
+      <constraints xsi:type="SQLConstraints:PrimaryKey" xmi:id="_aioogA7bEeGXffjN-SIVYg" name="PK_WeatherForecast" members="_YmRCcA7bEeGXffjN-SIVYg"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_kE5zgA7cEeGXffjN-SIVYg" name="ForeignKey1" members="_YmRCcA7bEeGXffjN-SIVYg" referencedMembers="_QLxs8A7cEeGXffjN-SIVYg" referencedTable="_NE4NcA7cEeGXffjN-SIVYg"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="__ArowA9xEeGyOeTuyf9OHA" name="ForeignKey2" members="_AnkHAA9yEeGyOeTuyf9OHA" referencedMembers="_cBLfgQ0tEeGA9YZquMf4XA" referencedTable="_FKrS4QuuEeGd_bl2EJFKBw"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_dj4WcA-gEeGyOeTuyf9OHA" name="ForeignKey3" members="_YmRCcA7bEeGXffjN-SIVYg" referencedMembers="_Uc0rUA-gEeGyOeTuyf9OHA" referencedTable="_SbMx0A-gEeGyOeTuyf9OHA"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_lDgFoAuuEeGd_bl2EJFKBw" name="MeteorologicalObjectCollection" referencingForeignKeys="_ePg38A0wEeGA9YZquMf4XA _TObdEA7FEeGJ9YNpb5W1mw _e6qasA7FEeGJ9YNpb5W1mw _Kgp_MA7GEeGJ9YNpb5W1mw">
+      <eAnnotations xmi:id="_lDgssAuuEeGd_bl2EJFKBw" source="AdditionalAttributes">
+        <details xmi:id="_lDgssQuuEeGd_bl2EJFKBw" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_SZEOYA0wEeGA9YZquMf4XA" name="id_MOC">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_cp3IwA0wEeGA9YZquMf4XA" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <columns xmi:id="_UQivgA4DEeGajYYgJyslIQ" name="id_AF"/>
+      <columns xmi:id="_218t8A6rEeGJ9YNpb5W1mw" name="id_members"/>
+      <columns xmi:id="_rT5VUA7SEeGJ9YNpb5W1mw" name="id_member"/>
+      <columns xmi:id="_09H_gA95EeGyOeTuyf9OHA" name="id_BOM"/>
+      <constraints xsi:type="SQLConstraints:PrimaryKey" xmi:id="_aREFYA0wEeGA9YZquMf4XA" name="PK_MeteorologicalObjectCollection" members="_SZEOYA0wEeGA9YZquMf4XA"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_pUm-IA7SEeGJ9YNpb5W1mw" name="ForeignKey1" members="_rT5VUA7SEeGJ9YNpb5W1mw" referencedMembers="_g-CNMA6wEeGJ9YNpb5W1mw" referencedTable="_eQj6UA6wEeGJ9YNpb5W1mw"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_3RsDIA95EeGyOeTuyf9OHA" name="ForeignKey2" members="_09H_gA95EeGyOeTuyf9OHA" referencedMembers="_wfNtMAn8EeGolJbdKEf7lw" referencedTable="_umS3AAnsEeGJx4aEEEuh8g"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="__iVDoA95EeGyOeTuyf9OHA" name="ForeignKey3" members="_SZEOYA0wEeGA9YZquMf4XA" referencedMembers="_6Tm8AA95EeGyOeTuyf9OHA" referencedTable="_zX4gAA95EeGyOeTuyf9OHA"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_2M7rwAuuEeGd_bl2EJFKBw" name="gml:validTime">
+      <eAnnotations xmi:id="_2M8S0AuuEeGd_bl2EJFKBw" source="AdditionalAttributes">
+        <details xmi:id="_2M854AuuEeGd_bl2EJFKBw" key="Generated" value="false"/>
+      </eAnnotations>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_3CEkAAuuEeGd_bl2EJFKBw" name="approval" referencingForeignKeys="_t_YXIA4BEeGajYYgJyslIQ _i7iREA9zEeGyOeTuyf9OHA">
+      <eAnnotations xmi:id="_3CFLEAuuEeGd_bl2EJFKBw" source="AdditionalAttributes">
+        <details xmi:id="_3CFyIAuuEeGd_bl2EJFKBw" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_SnfnsQ37EeGajYYgJyslIQ" name="id_Ap"/>
+      <columns xmi:id="_CTweAA38EeGajYYgJyslIQ" name="id">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_Nr9sYA38EeGajYYgJyslIQ" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_GOmRAA3-EeGajYYgJyslIQ" name="approvedBy">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_L-P7cA3-EeGajYYgJyslIQ" name="Varchar" primitiveType="CHARACTER_VARYING"/>
+      </columns>
+      <columns xmi:id="_MttpgA3-EeGajYYgJyslIQ" name="approvalTime">
+        <containedType xsi:type="SQLDataTypes:DateDataType" xmi:id="_eyL7kA3-EeGajYYgJyslIQ" name="Date" primitiveType="DATE"/>
+      </columns>
+      <columns xmi:id="_6bHrgA90EeGyOeTuyf9OHA" name="id_Signature">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_A0dMIA91EeGyOeTuyf9OHA" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_X2pXsA38EeGajYYgJyslIQ" name="ApprovedMeteorologicalObjectCollection" members="_SnfnsQ37EeGajYYgJyslIQ" referencedMembers="_cBLfgQ0tEeGA9YZquMf4XA"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_pecnoA93EeGyOeTuyf9OHA" name="ForeignKey1" members="_SnfnsQ37EeGajYYgJyslIQ" referencedMembers="_tuCNgA93EeGyOeTuyf9OHA" referencedTable="_dzNIgA93EeGyOeTuyf9OHA"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_VcZ_gAuvEeGd_bl2EJFKBw" name="AbstractFeature">
+      <eAnnotations xmi:id="_VcbNoAuvEeGd_bl2EJFKBw" source="AdditionalAttributes">
+        <details xmi:id="_VcbNoQuvEeGd_bl2EJFKBw" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_IyhNAA4DEeGajYYgJyslIQ" name="id_AF"/>
+      <columns xmi:id="_DCK_AA4DEeGajYYgJyslIQ" name="id_StandardObjectProperties"/>
+      <columns xmi:id="_0__9IA6kEeGJ9YNpb5W1mw" name="id_AbstractGMLType"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_hL4XAAuyEeGd_bl2EJFKBw" name="AbstractGMLType">
+      <eAnnotations xmi:id="_hL5lIAuyEeGd_bl2EJFKBw" source="AdditionalAttributes">
+        <details xmi:id="_hL5lIQuyEeGd_bl2EJFKBw" key="Generated" value="false"/>
+      </eAnnotations>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_wKo1UAuyEeGd_bl2EJFKBw" name="gml:boundedBy">
+      <eAnnotations xmi:id="_wKpcYAuyEeGd_bl2EJFKBw" source="AdditionalAttributes">
+        <details xmi:id="_wKpcYQuyEeGd_bl2EJFKBw" key="Generated" value="false"/>
+      </eAnnotations>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_zldWYAuyEeGd_bl2EJFKBw" name="gml:location">
+      <eAnnotations xmi:id="_zld9cAuyEeGd_bl2EJFKBw" source="AdditionalAttributes">
+        <details xmi:id="_zld9cQuyEeGd_bl2EJFKBw" key="Generated" value="false"/>
+      </eAnnotations>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_oFm9AAu0EeGd_bl2EJFKBw" name="MeteorologicalAnalysis">
+      <eAnnotations xmi:id="_oFnkEAu0EeGd_bl2EJFKBw" source="AdditionalAttributes">
+        <details xmi:id="_oFoLIAu0EeGd_bl2EJFKBw" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_pfllYA0tEeGA9YZquMf4XA" name="id_ApprovedMeteorologicalObjectCollection">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_syNzwA0tEeGA9YZquMf4XA" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <columns xmi:id="_CsPlsA7cEeGXffjN-SIVYg" name="id_MA"/>
+      <columns xmi:id="_MupNkA9yEeGyOeTuyf9OHA" name="id_AMOC" nullable="false">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_UX7TIA9yEeGyOeTuyf9OHA" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <columns xmi:id="_9--TUA-hEeGyOeTuyf9OHA" name="analysisTime" nullable="false"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_-Vb9cA0uEeGA9YZquMf4XA" name="ApprovedMeteorologicalObjectCollection" members="_pfllYA0tEeGA9YZquMf4XA" referencedMembers="_cBLfgQ0tEeGA9YZquMf4XA"/>
+      <constraints xsi:type="SQLConstraints:PrimaryKey" xmi:id="_H3lCIA7cEeGXffjN-SIVYg" name="PK_MeteorologicalAnalysis" members="_CsPlsA7cEeGXffjN-SIVYg"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_YAnREA9yEeGyOeTuyf9OHA" name="ForeignKey1" members="_MupNkA9yEeGyOeTuyf9OHA" referencedMembers="_cBLfgQ0tEeGA9YZquMf4XA" referencedTable="_FKrS4QuuEeGd_bl2EJFKBw"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_PwYfcA-iEeGyOeTuyf9OHA" name="ForeignKey2" members="_CsPlsA7cEeGXffjN-SIVYg" referencedMembers="_KtB6UA-iEeGyOeTuyf9OHA" referencedTable="_Hu58UA-iEeGyOeTuyf9OHA"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_OwVhMA4BEeGajYYgJyslIQ" name="Authority" referencingForeignKeys="_15z8IA93EeGyOeTuyf9OHA">
+      <eAnnotations xmi:id="_OwXWYA4BEeGajYYgJyslIQ" source="AdditionalAttributes">
+        <details xmi:id="_OwXWYQ4BEeGajYYgJyslIQ" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_doiEgA4BEeGajYYgJyslIQ" name="id_Au">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_X-eJwA93EeGyOeTuyf9OHA" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <columns xmi:id="_ZKqLAA4BEeGajYYgJyslIQ" name="authorityId">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_np9GIA4BEeGajYYgJyslIQ" name="Varchar" primitiveType="CHARACTER_VARYING" length="256"/>
+      </columns>
+      <columns xmi:id="_bk_kgA93EeGyOeTuyf9OHA" name="gml:id"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_t_YXIA4BEeGajYYgJyslIQ" name="approval" members="_doiEgA4BEeGajYYgJyslIQ" referencedMembers="_CTweAA38EeGajYYgJyslIQ" referencedTable="_3CEkAAuuEeGd_bl2EJFKBw"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_umS3AAnsEeGJx4aEEEuh8g" name="BasicObjectMetadata" referencingForeignKeys="_l8uSwA7GEeGJ9YNpb5W1mw _gLho0A7JEeGJ9YNpb5W1mw _3RsDIA95EeGyOeTuyf9OHA _LAM1IA96EeGyOeTuyf9OHA _qT1RUA-UEeGyOeTuyf9OHA">
+      <eAnnotations xmi:id="_umV6UAnsEeGJx4aEEEuh8g" source="AdditionalAttributes">
+        <details xmi:id="_umV6UQnsEeGJx4aEEEuh8g" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_wfNtMAn8EeGolJbdKEf7lw" name="id_BOM" nullable="false">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_1ACNAAn8EeGolJbdKEf7lw" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <columns xmi:id="_qYwbMA6wEeGJ9YNpb5W1mw" name="id_MeteorologicalObjectCollection"/>
+      <columns xmi:id="_l8DQcAn8EeGolJbdKEf7lw">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_obzQYAn8EeGolJbdKEf7lw" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <columns xmi:id="_U6YVoA7SEeGJ9YNpb5W1mw" name="id_metaData"/>
+      <columns xmi:id="_zV0u8AnxEeGJx4aEEEuh8g" name="creationTime" nullable="false">
+        <containedType xsi:type="SQLDataTypes:DateDataType" xmi:id="_rg5koAnyEeGJx4aEEEuh8g" name="Date" primitiveType="DATE"/>
+      </columns>
+      <columns xmi:id="_xxv3oAnyEeGJx4aEEEuh8g" name="latestModificationTime">
+        <containedType xsi:type="SQLDataTypes:DateDataType" xmi:id="_6DAjMAnyEeGJx4aEEEuh8g" name="Date" primitiveType="DATE"/>
+      </columns>
+      <columns xmi:id="_JkabkAnzEeGJx4aEEEuh8g" name="shortInfo">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_dBrskAnzEeGJx4aEEEuh8g" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_JmKIAAnzEeGJx4aEEEuh8g" name="longInfo">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_bP5l4AnzEeGJx4aEEEuh8g" name="Varchar" primitiveType="CHARACTER_VARYING" length="2147483647"/>
+      </columns>
+      <columns xmi:id="_f0YVYAuuEeGd_bl2EJFKBw" name="Column1"/>
+      <constraints xsi:type="SQLConstraints:PrimaryKey" xmi:id="_6IQrEAn8EeGolJbdKEf7lw" name="PK_BasicObjectMetadata" members="_wfNtMAn8EeGolJbdKEf7lw"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_Ov8rgAojEeG74-oo8e12zg" name="ForeignKey2" members="_l8DQcAn8EeGolJbdKEf7lw" referencedMembers="_Rdx1cAn8EeGolJbdKEf7lw" referencedTable="_0CEpkAn0EeGJx4aEEEuh8g"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_TObdEA7FEeGJ9YNpb5W1mw" name="ForeignKey1" members="_qYwbMA6wEeGJ9YNpb5W1mw" referencedMembers="_SZEOYA0wEeGA9YZquMf4XA" referencedTable="_lDgFoAuuEeGd_bl2EJFKBw"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_cOT2QA7SEeGJ9YNpb5W1mw" name="ForeignKey3" members="_U6YVoA7SEeGJ9YNpb5W1mw" referencedMembers="_Rdx1cAn8EeGolJbdKEf7lw" referencedTable="_0CEpkAn0EeGJx4aEEEuh8g"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_0CEpkAn0EeGJx4aEEEuh8g" name="metaData" referencingForeignKeys="_Ov8rgAojEeG74-oo8e12zg _cOT2QA7SEeGJ9YNpb5W1mw">
+      <eAnnotations xmi:id="_0CFQoAn0EeGJx4aEEEuh8g" source="AdditionalAttributes">
+        <details xmi:id="_0CFQoQn0EeGJx4aEEEuh8g" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_Rdx1cAn8EeGolJbdKEf7lw" name="id_metaData" nullable="false">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_Ujr2cAn8EeGolJbdKEf7lw" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <columns xmi:id="_aTJnkA7GEeGJ9YNpb5W1mw" name="id_BasicObjectMetadata"/>
+      <columns xmi:id="_00PGUAn0EeGJx4aEEEuh8g" name="title">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_NX-TUAogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_2We8MAn0EeGJx4aEEEuh8g" name="creator">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_UYBOoAogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_2YMzcAn0EeGJx4aEEEuh8g" name="subject">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_S-J4sAogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_0FFr4An1EeGJx4aEEEuh8g" name="description">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_ZylZ4AogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="1024"/>
+      </columns>
+      <columns xmi:id="_0NgBAAn1EeGJx4aEEEuh8g" name="publisher">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_bWWSsAogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_0Sf1wAn1EeGJx4aEEEuh8g" name="contributor">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_ePEMQAogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_0XRBAAn1EeGJx4aEEEuh8g" name="date">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_hjB3YAogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_0ZIpQAn1EeGJx4aEEEuh8g" name="type">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_jCYKQAogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_0awZ4An1EeGJx4aEEEuh8g" name="format">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_k1oQkAogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_0cjJoAn1EeGJx4aEEEuh8g" name="identifier">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_mZeB4AogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_NmMuoAn2EeGJx4aEEEuh8g" name="Language"/>
+      <columns xmi:id="_NkGc4An2EeGJx4aEEEuh8g" name="language">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_o6-VUAogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_OfRrsAn2EeGJx4aEEEuh8g"/>
+      <columns xmi:id="_i__WsAn2EeGJx4aEEEuh8g" name="relation">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_sdtcQAogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="128"/>
+      </columns>
+      <columns xmi:id="_nNcOkAn2EeGJx4aEEEuh8g" name="coverage">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_vzSQ8AogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="1024"/>
+      </columns>
+      <columns xmi:id="_qjoHQAn2EeGJx4aEEEuh8g" name="rights">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_xumuIAogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="1024"/>
+      </columns>
+      <columns xmi:id="_pPlQAAn3EeGJx4aEEEuh8g" name="Column1"/>
+      <columns xmi:id="_pRWxoAn3EeGJx4aEEEuh8g" name="keyword">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_zXG9AAogEeGolJbdKEf7lw" name="Varchar" primitiveType="CHARACTER_VARYING" length="1024"/>
+      </columns>
+      <constraints xsi:type="SQLConstraints:PrimaryKey" xmi:id="_a1KbkAn8EeGolJbdKEf7lw" name="PK_MeteorologicalObjectMetaData" members="_Rdx1cAn8EeGolJbdKEf7lw"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_l8uSwA7GEeGJ9YNpb5W1mw" name="ForeignKey1" members="_aTJnkA7GEeGJ9YNpb5W1mw" referencedMembers="_wfNtMAn8EeGolJbdKEf7lw" referencedTable="_umS3AAnsEeGJx4aEEEuh8g"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_eQj6UA6wEeGJ9YNpb5W1mw" name="member" referencingForeignKeys="_pUm-IA7SEeGJ9YNpb5W1mw _D_ImIA96EeGyOeTuyf9OHA">
+      <eAnnotations xmi:id="_eQvggA6wEeGJ9YNpb5W1mw" source="AdditionalAttributes">
+        <details xmi:id="_eQvggQ6wEeGJ9YNpb5W1mw" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_g-CNMA6wEeGJ9YNpb5W1mw" name="id_m"/>
+      <columns xmi:id="_jupToA6wEeGJ9YNpb5W1mw"/>
+      <columns xmi:id="_M8GKEA7KEeGJ9YNpb5W1mw" name="id_MeteorologicalObjectCollection"/>
+      <columns xmi:id="_VSoj8An4EeGJx4aEEEuh8g" name="id_BOM">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_MCZVYAn9EeGolJbdKEf7lw" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <columns xmi:id="_ctQeQAn_EeGolJbdKEf7lw" name="UncertaintyArea">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_kKOmIAn_EeGolJbdKEf7lw" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_e6qasA7FEeGJ9YNpb5W1mw" name="ForeignKey1" members="_jupToA6wEeGJ9YNpb5W1mw" referencedMembers="_SZEOYA0wEeGA9YZquMf4XA" referencedTable="_lDgFoAuuEeGd_bl2EJFKBw"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_Kgp_MA7GEeGJ9YNpb5W1mw" name="ForeignKey2" members="_M8GKEA7KEeGJ9YNpb5W1mw" referencedMembers="_SZEOYA0wEeGA9YZquMf4XA" referencedTable="_lDgFoAuuEeGd_bl2EJFKBw"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_gLho0A7JEeGJ9YNpb5W1mw" name="ForeignKey3" members="_VSoj8An4EeGJx4aEEEuh8g" referencedMembers="_wfNtMAn8EeGolJbdKEf7lw" referencedTable="_umS3AAnsEeGJx4aEEEuh8g"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_LAM1IA96EeGyOeTuyf9OHA" name="ForeignKey4" members="_VSoj8An4EeGJx4aEEEuh8g" referencedMembers="_wfNtMAn8EeGolJbdKEf7lw" referencedTable="_umS3AAnsEeGJx4aEEEuh8g"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_yGkqUA-TEeGyOeTuyf9OHA" name="ForeignKey5" members="_g-CNMA6wEeGJ9YNpb5W1mw" referencedMembers="_unyPQA-TEeGyOeTuyf9OHA" referencedTable="_sZ4NQA-TEeGyOeTuyf9OHA"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_NE4NcA7cEeGXffjN-SIVYg" name="wf_ext_amoc" referencingForeignKeys="_kE5zgA7cEeGXffjN-SIVYg">
+      <eAnnotations xmi:id="_NE5bkA7cEeGXffjN-SIVYg" source="AdditionalAttributes">
+        <details xmi:id="_NE6CoA7cEeGXffjN-SIVYg" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_QLxs8A7cEeGXffjN-SIVYg" name="id_WF"/>
+      <columns xmi:id="_YYG1MA7cEeGXffjN-SIVYg" name="id_AMOC"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_N8S3AA9zEeGyOeTuyf9OHA" name="Approvation" referencingForeignKeys="_iWwwEA9zEeGyOeTuyf9OHA">
+      <eAnnotations xmi:id="_N8aLwA9zEeGyOeTuyf9OHA" source="AdditionalAttributes">
+        <details xmi:id="_N8aLwQ9zEeGyOeTuyf9OHA" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_SPGwAA9zEeGyOeTuyf9OHA" name="id_AMOC"/>
+      <columns xmi:id="_TbPzAA9zEeGyOeTuyf9OHA" name="id_A"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_i7iREA9zEeGyOeTuyf9OHA" name="ForeignKey1" members="_TbPzAA9zEeGyOeTuyf9OHA" referencedMembers="_SnfnsQ37EeGajYYgJyslIQ" referencedTable="_3CEkAAuuEeGd_bl2EJFKBw"/>
+      <constraints xsi:type="SQLConstraints:PrimaryKey" xmi:id="_9aBlQA93EeGyOeTuyf9OHA" name="PK_Approvation" members="_SPGwAA9zEeGyOeTuyf9OHA _TbPzAA9zEeGyOeTuyf9OHA"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_dzNIgA93EeGyOeTuyf9OHA" name="ApprovedBy" referencingForeignKeys="_pecnoA93EeGyOeTuyf9OHA">
+      <eAnnotations xmi:id="_dzOWoA93EeGyOeTuyf9OHA" source="AdditionalAttributes">
+        <details xmi:id="_dzOWoQ93EeGyOeTuyf9OHA" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_tuCNgA93EeGyOeTuyf9OHA" name="id_Ap"/>
+      <columns xmi:id="_ztQlAA93EeGyOeTuyf9OHA" name="id_Au"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_15z8IA93EeGyOeTuyf9OHA" name="ForeignKey1" members="_ztQlAA93EeGyOeTuyf9OHA" referencedMembers="_doiEgA4BEeGajYYgJyslIQ" referencedTable="_OwVhMA4BEeGajYYgJyslIQ"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_zX4gAA95EeGyOeTuyf9OHA" name="has" referencingForeignKeys="__iVDoA95EeGyOeTuyf9OHA">
+      <eAnnotations xmi:id="_zX5uIA95EeGyOeTuyf9OHA" source="AdditionalAttributes">
+        <details xmi:id="_zX5uIQ95EeGyOeTuyf9OHA" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_6Tm8AA95EeGyOeTuyf9OHA" name="id_MOC"/>
+      <columns xmi:id="_7ONjEA95EeGyOeTuyf9OHA" name="id_m"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_D_ImIA96EeGyOeTuyf9OHA" name="ForeignKey1" members="_7ONjEA95EeGyOeTuyf9OHA" referencedMembers="_g-CNMA6wEeGJ9YNpb5W1mw" referencedTable="_eQj6UA6wEeGJ9YNpb5W1mw"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_WW0lwA-TEeGyOeTuyf9OHA" name="AbstractMeteorologicalObject" referencingForeignKeys="_5TY2UA-TEeGyOeTuyf9OHA">
+      <eAnnotations xmi:id="_WW1M0A-TEeGyOeTuyf9OHA" source="AdditionalAttributes">
+        <details xmi:id="_WW1M0Q-TEeGyOeTuyf9OHA" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_ocWAsA-TEeGyOeTuyf9OHA" name="id_AMO"/>
+      <columns xmi:id="_nwsmMA-UEeGyOeTuyf9OHA" name="id_BOM"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_qT1RUA-UEeGyOeTuyf9OHA" name="ForeignKey1" members="_nwsmMA-UEeGyOeTuyf9OHA" referencedMembers="_wfNtMAn8EeGolJbdKEf7lw" referencedTable="_umS3AAnsEeGJx4aEEEuh8g"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_sZ4NQA-TEeGyOeTuyf9OHA" name="m_has_AMO" referencingForeignKeys="_yGkqUA-TEeGyOeTuyf9OHA">
+      <eAnnotations xmi:id="_sZ40UA-TEeGyOeTuyf9OHA" source="AdditionalAttributes">
+        <details xmi:id="_sZ40UQ-TEeGyOeTuyf9OHA" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_unyPQA-TEeGyOeTuyf9OHA" name="id_m"/>
+      <columns xmi:id="_v06JsA-TEeGyOeTuyf9OHA" name="id_AMO"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_5TY2UA-TEeGyOeTuyf9OHA" name="ForeignKey1" members="_v06JsA-TEeGyOeTuyf9OHA" referencedMembers="_ocWAsA-TEeGyOeTuyf9OHA" referencedTable="_WW0lwA-TEeGyOeTuyf9OHA"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_OCqrUA-gEeGyOeTuyf9OHA" name="targetRegion" referencingForeignKeys="_f_XhcA-gEeGyOeTuyf9OHA _Uix3cA-iEeGyOeTuyf9OHA">
+      <eAnnotations xmi:id="_OCrSYA-gEeGyOeTuyf9OHA" source="AdditionalAttributes">
+        <details xmi:id="_OCrSYQ-gEeGyOeTuyf9OHA" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_PXH80A-gEeGyOeTuyf9OHA" name="id_tR"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_SbMx0A-gEeGyOeTuyf9OHA" name="WF_has_tR" referencingForeignKeys="_dj4WcA-gEeGyOeTuyf9OHA">
+      <eAnnotations xmi:id="_SbNY4A-gEeGyOeTuyf9OHA" source="AdditionalAttributes">
+        <details xmi:id="_SbN_8A-gEeGyOeTuyf9OHA" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_Uc0rUA-gEeGyOeTuyf9OHA" name="id_WF"/>
+      <columns xmi:id="_YVPHUA-gEeGyOeTuyf9OHA" name="id_tR"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_f_XhcA-gEeGyOeTuyf9OHA" name="ForeignKey1" members="_YVPHUA-gEeGyOeTuyf9OHA" referencedMembers="_PXH80A-gEeGyOeTuyf9OHA" referencedTable="_OCqrUA-gEeGyOeTuyf9OHA"/>
+    </tables>
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_Hu58UA-iEeGyOeTuyf9OHA" name="MA_has_tR" referencingForeignKeys="_PwYfcA-iEeGyOeTuyf9OHA">
+      <eAnnotations xmi:id="_Hu6jYA-iEeGyOeTuyf9OHA" source="AdditionalAttributes">
+        <details xmi:id="_Hu6jYQ-iEeGyOeTuyf9OHA" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_KtB6UA-iEeGyOeTuyf9OHA" name="id_MA"/>
+      <columns xmi:id="_MH0dUA-iEeGyOeTuyf9OHA" name="id_tR"/>
+      <constraints xsi:type="SQLConstraints:ForeignKey" xmi:id="_Uix3cA-iEeGyOeTuyf9OHA" name="ForeignKey1" members="_MH0dUA-iEeGyOeTuyf9OHA" referencedMembers="_PXH80A-gEeGyOeTuyf9OHA" referencedTable="_OCqrUA-gEeGyOeTuyf9OHA"/>
+    </tables>
+    <userDefinedTypes xsi:type="SQLDataTypes:StructuredUserDefinedType" xmi:id="_HOnLQBBpEeGk_ZEGRYSbrQ" name="Geometry">
+      <attributes xmi:id="_HOoZYBBpEeGk_ZEGRYSbrQ" name="Geometry Type" referencedType="_HOnyUBBpEeGk_ZEGRYSbrQ"/>
+      <attributes xmi:id="_HOoZYRBpEeGk_ZEGRYSbrQ" name="System Reference">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_HOoZYhBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOoZahBpEeGk_ZEGRYSbrQ" name="Coordinate Dimension" referencedType="_HOoZYxBpEeGk_ZEGRYSbrQ"/>
+      <attributes xmi:id="_HOoZaxBpEeGk_ZEGRYSbrQ" name="Data Tolerance">
+        <containedType xsi:type="SQLDataTypes:FixedPrecisionDataType" xmi:id="_HOoZbBBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOoZbRBpEeGk_ZEGRYSbrQ" name="Geometry Bounds">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_HOoZbhBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOoZdhBpEeGk_ZEGRYSbrQ" name="Spatial Index" referencedType="_HOoZbxBpEeGk_ZEGRYSbrQ"/>
+      <attributes xmi:id="_HOoZdxBpEeGk_ZEGRYSbrQ" name="Oracle System Reference">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_HOoZeBBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+    </userDefinedTypes>
+    <userDefinedTypes xsi:type="SQLDataTypes:StructuredUserDefinedType" xmi:id="_HOnyUBBpEeGk_ZEGRYSbrQ" name="Geometry Type">
+      <attributes xmi:id="_HOnyURBpEeGk_ZEGRYSbrQ" name="Unknown Type" defaultValue="Unknown Type">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_HOnyUhBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOnyUxBpEeGk_ZEGRYSbrQ" name="Point" defaultValue="Point">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_HOnyVBBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOnyVRBpEeGk_ZEGRYSbrQ" name="Line" defaultValue="Line">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_HOnyVhBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOnyVxBpEeGk_ZEGRYSbrQ" name="Polygon" defaultValue="Polygon">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_HOnyWBBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOnyWRBpEeGk_ZEGRYSbrQ" name="MultiPoint" defaultValue="MultiPoint">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_HOnyWhBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOnyWxBpEeGk_ZEGRYSbrQ" name="MultiLine" defaultValue="MultiLine">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_HOnyXBBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOnyXRBpEeGk_ZEGRYSbrQ" name="MultiPolygon" defaultValue="MultiPolygon">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_HOnyXhBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOnyXxBpEeGk_ZEGRYSbrQ" name="Geometry Collection" defaultValue="Geometry Collection">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_HOnyYBBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+    </userDefinedTypes>
+    <userDefinedTypes xsi:type="SQLDataTypes:StructuredUserDefinedType" xmi:id="_HOoZYxBpEeGk_ZEGRYSbrQ" name="Coordinate Dimension">
+      <attributes xmi:id="_HOoZZBBpEeGk_ZEGRYSbrQ" name="2" defaultValue="2">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_HOoZZRBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOoZZhBpEeGk_ZEGRYSbrQ" name="3" defaultValue="3">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_HOoZZxBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOoZaBBpEeGk_ZEGRYSbrQ" name="4" defaultValue="4">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_HOoZaRBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+    </userDefinedTypes>
+    <userDefinedTypes xsi:type="SQLDataTypes:StructuredUserDefinedType" xmi:id="_HOoZbxBpEeGk_ZEGRYSbrQ" name="Spatial Index">
+      <attributes xmi:id="_HOoZcBBpEeGk_ZEGRYSbrQ" name="R-TREE" defaultValue="R-TREE">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_HOoZcRBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOoZchBpEeGk_ZEGRYSbrQ" name="Q-TREE" defaultValue="Q-TREE">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_HOoZcxBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+      <attributes xmi:id="_HOoZdBBpEeGk_ZEGRYSbrQ" name="GIST" defaultValue="GIST">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_HOoZdRBpEeGk_ZEGRYSbrQ"/>
+      </attributes>
+    </userDefinedTypes>
+  </schemas>
+</SQLSchema:Database>
