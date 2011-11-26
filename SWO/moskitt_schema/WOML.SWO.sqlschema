@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SQLSchema:Database xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SQLDataTypes="http:///org/eclipse/datatools/modelbase/sql/datatypes.ecore" xmlns:SQLSchema="http:///org/eclipse/datatools/modelbase/sql/schema.ecore" xmlns:SQLTables="http:///org/eclipse/datatools/modelbase/sql/tables.ecore" xmi:id="_IYTC4ReKEeG5mIiXXU_aMg" name="Database" vendor="Generic JDBC" version="1.0">
+  <schemas xmi:id="_IYTC4heKEeG5mIiXXU_aMg" name="Schema">
+    <tables xsi:type="SQLTables:PersistentTable" xmi:id="_4Nz70BeKEeG5mIiXXU_aMg" name="ColdFront">
+      <eAnnotations xmi:id="_4N5bYBeKEeG5mIiXXU_aMg" source="AdditionalAttributes">
+        <details xmi:id="_4N5bYReKEeG5mIiXXU_aMg" key="Generated" value="false"/>
+      </eAnnotations>
+      <columns xmi:id="_48u3UBeKEeG5mIiXXU_aMg" name="id_CF">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_7LiRMBeKEeG5mIiXXU_aMg" name="Integer" primitiveType="INTEGER"/>
+      </columns>
+    </tables>
+    <userDefinedTypes xsi:type="SQLDataTypes:StructuredUserDefinedType" xmi:id="_IY-YUBeKEeG5mIiXXU_aMg" name="Geometry">
+      <attributes xmi:id="_IZA0mheKEeG5mIiXXU_aMg" name="Geometry Type" referencedType="_IZANgBeKEeG5mIiXXU_aMg"/>
+      <attributes xmi:id="_IZA0mxeKEeG5mIiXXU_aMg" name="System Reference">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_IZA0nBeKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZA0pBeKEeG5mIiXXU_aMg" name="Coordinate Dimension" referencedType="_IZA0nReKEeG5mIiXXU_aMg"/>
+      <attributes xmi:id="_IZA0pReKEeG5mIiXXU_aMg" name="Data Tolerance">
+        <containedType xsi:type="SQLDataTypes:FixedPrecisionDataType" xmi:id="_IZA0pheKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZA0pxeKEeG5mIiXXU_aMg" name="Geometry Bounds">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_IZA0qBeKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZBbpBeKEeG5mIiXXU_aMg" name="Spatial Index" referencedType="_IZA0qReKEeG5mIiXXU_aMg"/>
+      <attributes xmi:id="_IZBbpReKEeG5mIiXXU_aMg" name="Oracle System Reference">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_IZBbpheKEeG5mIiXXU_aMg"/>
+      </attributes>
+    </userDefinedTypes>
+    <userDefinedTypes xsi:type="SQLDataTypes:StructuredUserDefinedType" xmi:id="_IZANgBeKEeG5mIiXXU_aMg" name="Geometry Type">
+      <attributes xmi:id="_IZANgReKEeG5mIiXXU_aMg" name="Unknown Type" defaultValue="Unknown Type">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_IZANgheKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZANgxeKEeG5mIiXXU_aMg" name="Point" defaultValue="Point">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_IZANhBeKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZANhReKEeG5mIiXXU_aMg" name="Line" defaultValue="Line">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_IZANhheKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZA0kBeKEeG5mIiXXU_aMg" name="Polygon" defaultValue="Polygon">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_IZA0kReKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZA0kheKEeG5mIiXXU_aMg" name="MultiPoint" defaultValue="MultiPoint">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_IZA0kxeKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZA0lBeKEeG5mIiXXU_aMg" name="MultiLine" defaultValue="MultiLine">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_IZA0lReKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZA0lheKEeG5mIiXXU_aMg" name="MultiPolygon" defaultValue="MultiPolygon">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_IZA0lxeKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZA0mBeKEeG5mIiXXU_aMg" name="Geometry Collection" defaultValue="Geometry Collection">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_IZA0mReKEeG5mIiXXU_aMg"/>
+      </attributes>
+    </userDefinedTypes>
+    <userDefinedTypes xsi:type="SQLDataTypes:StructuredUserDefinedType" xmi:id="_IZA0nReKEeG5mIiXXU_aMg" name="Coordinate Dimension">
+      <attributes xmi:id="_IZA0nheKEeG5mIiXXU_aMg" name="2" defaultValue="2">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_IZA0nxeKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZA0oBeKEeG5mIiXXU_aMg" name="3" defaultValue="3">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_IZA0oReKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZA0oheKEeG5mIiXXU_aMg" name="4" defaultValue="4">
+        <containedType xsi:type="SQLDataTypes:IntegerDataType" xmi:id="_IZA0oxeKEeG5mIiXXU_aMg"/>
+      </attributes>
+    </userDefinedTypes>
+    <userDefinedTypes xsi:type="SQLDataTypes:StructuredUserDefinedType" xmi:id="_IZA0qReKEeG5mIiXXU_aMg" name="Spatial Index">
+      <attributes xmi:id="_IZA0qheKEeG5mIiXXU_aMg" name="R-TREE" defaultValue="R-TREE">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_IZA0qxeKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZBboBeKEeG5mIiXXU_aMg" name="Q-TREE" defaultValue="Q-TREE">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_IZBboReKEeG5mIiXXU_aMg"/>
+      </attributes>
+      <attributes xmi:id="_IZBboheKEeG5mIiXXU_aMg" name="GIST" defaultValue="GIST">
+        <containedType xsi:type="SQLDataTypes:CharacterStringDataType" xmi:id="_IZBboxeKEeG5mIiXXU_aMg"/>
+      </attributes>
+    </userDefinedTypes>
+  </schemas>
+</SQLSchema:Database>
