@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<as:AppSchemaDataAccess xmlns:as="http://www.geotools.org/app-schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geotools.org/app-schema AppSchemaDataAccess.xsd">
+    <namespaces>
+        <Namespace>
+            <prefix>gml</prefix>
+            <uri>http://www.opengis.net/gml/3.2</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlswo</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/swo/2011/11/15</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlcore</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/core/2011/11/15</uri>
+        </Namespace>
+    </namespaces>
+    <sourceDataStores>
+        <DataStore>
+          <id>datastore</id>
+                                        <parameters>
+                                            <Parameter>
+                                                <name>dbtype</name>
+                                                <value>postgis</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>host</name>
+                                                <value>localhost</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>port</name>
+                                                <value>5432</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>database</name>
+                                                <value>woml</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>user</name>
+                                                <value>postgres</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>passwd</name>
+                                                <value>asd123zzz</value>
+                                            </Parameter>
+                                        </parameters>
+        </DataStore>
+    </sourceDataStores>
+    <targetTypes>
+        <FeatureType>
+            <schemaUri>http://xml.fmi.fi/schema/woml/swo/2011/11/15/woml-swo.xsd</schemaUri>
+            <schemaUri>http://xml.fmi.fi/schema/woml/core/2011/11/15/woml-core.xsd</schemaUri>
+        </FeatureType>
+    </targetTypes>
+    <typeMappings>
+        <FeatureTypeMapping>
+            <sourceDataStore>datastore</sourceDataStore>
+            <sourceType>warm_front</sourceType>
+            <targetElement>womlswo:WarmFront</targetElement>
+            <attributeMappings>
+            
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlswo:WarmFront
+                    </targetAttribute>
+                    <idExpression>
+                        <OCQL>gml_id</OCQL>
+                    </idExpression>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        FEATURE_LINK[1]
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>associated</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>gml:validTime</targetAttribute>
+                    <targetAttributeNode>gml:TimePeriodPropertyType</targetAttributeNode>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>gml:validTime/gml:TimePeriod</targetAttribute>
+                    <ClientProperty>
+                        <name>gml:id</name>
+                        <value>time_period_gml_id</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>gml:validTime/gml:TimePeriod/gml:beginPosition</targetAttribute>
+                        <sourceExpression>
+                            <OCQL>time_period_begin_position</OCQL>
+                        </sourceExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>gml:validTime/gml:TimePeriod/gml:endPosition</targetAttribute>
+                        <sourceExpression>
+                            <OCQL>time_period_end_position</OCQL>
+                        </sourceExpression>
+                </AttributeMapping>               
+
+<!--
+
+                <AttributeMapping>
+                    <targetAttribute>
+                      gml:name
+                      </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>gml_name</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>codeSpace</name>
+                        <value>gml_name_code_space</value>
+                    </ClientProperty>
+                </AttributeMapping>
+-->  
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:shortInfo
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>short_info</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>xml:lang</name>
+                        <value>'EN-en'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:longInfo
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>long_info</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>xml:lang</name>
+                        <value>'EN-en'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:controlCurve
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>control_curve</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+
+                
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:creationTime
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>creation_time</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>                
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:latestModificationTime 
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>latest_modification_time </OCQL>
+                    </sourceExpression>
+                </AttributeMapping>                
+
+
+            </attributeMappings>
+        </FeatureTypeMapping>
+    </typeMappings>
+</as:AppSchemaDataAccess>

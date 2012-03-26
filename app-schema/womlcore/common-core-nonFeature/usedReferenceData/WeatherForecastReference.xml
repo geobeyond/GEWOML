@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<as:AppSchemaDataAccess xmlns:as="http://www.geotools.org/app-schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geotools.org/app-schema AppSchemaDataAccess.xsd">
+    <namespaces>
+        <Namespace>
+            <prefix>gml</prefix>
+            <uri>http://www.opengis.net/gml/3.2</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlcore</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/core/2011/11/15</uri>
+        </Namespace>
+    </namespaces>
+    <sourceDataStores>
+        <DataStore>
+          <id>datastore</id>
+                                        <parameters>
+                                            <Parameter>
+                                                <name>dbtype</name>
+                                                <value>postgis</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>host</name>
+                                                <value>localhost</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>port</name>
+                                                <value>5432</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>database</name>
+                                                <value>woml</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>user</name>
+                                                <value>postgres</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>passwd</name>
+                                                <value>asd123zzz</value>
+                                            </Parameter>
+                                        </parameters>
+        </DataStore>
+    </sourceDataStores>
+    <targetTypes>
+        <FeatureType>
+           <schemaUri>http://xml.fmi.fi/schema/woml/core/2011/11/15/woml-core.xsd</schemaUri>
+        </FeatureType>
+    </targetTypes>
+    <typeMappings>
+        <FeatureTypeMapping>
+            <sourceDataStore>datastore</sourceDataStore>
+            <sourceType>weather_forecast_reference</sourceType>
+            <targetElement>womlcore:WeatherForecastReference</targetElement>
+  
+            <attributeMappings>
+            
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:WeatherForecastReference
+                    </targetAttribute>
+                    <idExpression>
+                        <OCQL>getId()</OCQL>
+                    </idExpression>
+                </AttributeMapping>
+
+                <!-- 
+                     - targetRegion
+                     - analysisTime
+                     - resultTime
+                     - validityTime
+                -->
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:targetRegion
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strTrim(geographic_region)</OCQL>
+                        <linkElement>womlcore:GeographicRegion</linkElement>
+                        <linkField>womlcore:GeographicRegion/@gml:id</linkField>
+                    </sourceExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:analysisTime
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>analysis_time</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:resultTime
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>result_time</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+
+                <!-- validityTime -->
+
+                <AttributeMapping>
+                    <targetAttribute>womlcore:validityTime</targetAttribute>
+                    <targetAttributeNode>womlcore:SimpleTimePeriodPropertyType</targetAttributeNode>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>womlcore:validityTime/womlcore:SimpleTimePeriod</targetAttribute>
+                    <ClientProperty>
+                        <name>gml:id</name>
+                        <value>gml_validity_time</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>womlcore:validityTime/womlcore:SimpleTimePeriod/womlcore:begin</targetAttribute>
+                        <sourceExpression>
+                            <OCQL>validity_time_begin</OCQL>
+                        </sourceExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>womlcore:validityTime/womlcore:SimpleTimePeriod/womlcore:end</targetAttribute>
+                        <sourceExpression>
+                            <OCQL>validity_time_end</OCQL>
+                        </sourceExpression>
+                </AttributeMapping> 
+
+
+   
+   
+            </attributeMappings>
+        </FeatureTypeMapping>
+    </typeMappings>
+</as:AppSchemaDataAccess>

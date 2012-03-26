@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<as:AppSchemaDataAccess xmlns:as="http://www.geotools.org/app-schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.geotools.org/app-schema AppSchemaDataAccess.xsd">
+    <namespaces>
+        <Namespace>
+            <prefix>gml</prefix>
+            <uri>http://www.opengis.net/gml/3.2</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlcore</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/core/2011/11/15</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlswo</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/swo/2011/11/15</uri>
+        </Namespace>        
+        <Namespace>
+            <prefix>dsig</prefix>
+            <uri>http://www.w3.org/2000/09/xmldsig#</uri>
+        </Namespace>
+    </namespaces>
+    <includedTypes>
+        <Include>../common-core-nonFeature/approval.xml</Include>
+        <Include>../common-core-nonFeature/GeographicRegion.xml</Include>
+        <Include>../common-core-nonFeature/usedReferenceData/MeteorologicalAnalysisReference.xml</Include>
+        <Include>../common-core-nonFeature/usedReferenceData/NumericalModelRunForecastReference.xml</Include>
+        <Include>../common-core-nonFeature/usedReferenceData/SatelliteImageReference.xml</Include>
+        <Include>../common-core-nonFeature/usedReferenceData/WeatherForecastReference.xml</Include>
+    </includedTypes>    
+   <sourceDataStores>
+        <DataStore>
+          <id>datastore</id>
+                                        <parameters>
+                                            <Parameter>
+                                                <name>dbtype</name>
+                                                <value>postgis</value>
+                                            </Parameter>
+                                   <!--         <Parameter>
+                                                <name>jndiReferenceName</name>
+                                                <value>java:comp/env/jdbc/woml</value>
+                                            </Parameter>                        
+                                       -->     <Parameter>
+                                                <name>host</name>
+                                                <value>localhost</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>port</name>
+                                                <value>5432</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>database</name>
+                                                <value>woml</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>user</name>
+                                                <value>postgres</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>passwd</name>
+                                                <value>asd123zzz</value>
+                                            </Parameter>
+                                        </parameters>
+        </DataStore>
+    </sourceDataStores>
+    <catalog>../../../schemas/catalog.xml</catalog>
+    <targetTypes>
+        <FeatureType>
+            <schemaUri>http://xml.fmi.fi/schema/woml/swo/2011/11/15/woml-swo.xsd</schemaUri>
+            <schemaUri>http://xml.fmi.fi/schema/woml/core/2011/11/15/woml-core.xsd</schemaUri>
+        </FeatureType>
+    </targetTypes>
+    <typeMappings>
+        <FeatureTypeMapping>
+            <sourceDataStore>datastore</sourceDataStore>
+            <sourceType>weather_forecast</sourceType>
+            <targetElement>womlcore:WeatherForecast</targetElement>
+            <attributeMappings>
+              
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:WeatherForecast
+                    </targetAttribute>
+                    <idExpression>
+                        <OCQL>id</OCQL>
+                    </idExpression>
+                </AttributeMapping>
+
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:ColdFront</linkElement>
+                        <linkField>FEATURE_LINK[1]</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:WarmFront</linkElement>
+                        <linkField>FEATURE_LINK[1]</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:creationTime
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>creation_time</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:latestModificationTime
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>latest_modification_time</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:shortInfo
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>short_info</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>xml:lang</name>
+                        <value>'EN-en'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:longInfo
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>long_info</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>xml:lang</name>
+                        <value>'EN-en'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>gml:validTime</targetAttribute>
+                    <targetAttributeNode>gml:TimePeriodPropertyType</targetAttributeNode>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>gml:validTime/gml:TimePeriod</targetAttribute>
+                    <ClientProperty>
+                        <name>gml:id</name>
+                        <value>time_period_gml_id</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>gml:validTime/gml:TimePeriod/gml:beginPosition</targetAttribute>
+                        <sourceExpression>
+                            <OCQL>time_period_begin_position</OCQL>
+                        </sourceExpression>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>gml:validTime/gml:TimePeriod/gml:endPosition</targetAttribute>
+                        <sourceExpression>
+                            <OCQL>time_period_end_position</OCQL>
+                        </sourceExpression>
+                </AttributeMapping>               
+
+            
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:approval
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlcore:Approval</linkElement>
+                        <linkField>FEATURE_LINK[3]</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:envelopedSignature/dsig:Signature/dsig:SignedInfo/dsig:Reference/dsig:DigestValue
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>'mo95+b184lAts/mjwd3Qo20fUiSmQF7qo2mJmKk9msE='</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+                
+                
+                <!-- x -->
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:envelopedSignature/dsig:Signature/dsig:SignedInfo/dsig:CanonicalizationMethod
+                    </targetAttribute>
+                    <ClientProperty>
+                        <name>Algorithm</name>
+                        <value>strTrim('http://www.w3.org/TR/2001/REC-xml-c14n-20010315')</value>
+                    </ClientProperty>
+                    <sourceExpression>
+                        <OCQL>''</OCQL>
+                    </sourceExpression>                    
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:envelopedSignature/dsig:Signature/dsig:SignatureValue
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>'mo95+b184lAts/mjwd3Qo20fUiSmQF7qo2mJmKk9msE='</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:envelopedSignature/dsig:Signature/dsig:KeyInfo/dsig:X509Data/dsig:X509SubjectName
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>'CN=test.user@organization.org,OU=Dev,O=Acme,L=Helsinki,ST=Uusimaa,C=FI'</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:envelopedSignature/dsig:Signature/dsig:KeyInfo/dsig:X509Data/dsig:X509Certificate
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>'MIIDIjCCAt+gAwIBAgIETnr6QTALBgcqhkjOOAQDBQAwdDELMAkGA1UEBhMCRkkxEDAOBgNVBAgT
+                        B1V1c2ltYWExETAPBgNVBAcTCEhlbHNpbmtpMQ0wCwYDVQQKEwRBY21lMQwwCgYDVQQLEwNEZXYx
+                        IzAhBgNVBAMMGnRlc3QudXNlckBvcmdhbml6YXRpb24ub3JnMB4XDTExMDkyMjA5MDUwNVoXDTE2
+                        MDIwODA5MDUwNVowdDELMAkGA1UEBhMCRkkxEDAOBgNVBAgTB1V1c2ltYWExETAPBgNVBAcTCEhl
+                        bHNpbmtpMQ0wCwYDVQQKEwRBY21lMQwwCgYDVQQLEwNEZXYxIzAhBgNVBAMMGnRlc3QudXNlckBv
+                        cmdhbml6YXRpb24ub3JnMIIBtzCCASwGByqGSM44BAEwggEfAoGBAP1/U4EddRIpUt9KnC7s5Of2
+                        EbdSPO9EAMMeP4C2USZpRV1AIlH7WT2NWPq/xfW6MPbLm1Vs14E7gB00b/JmYLdrmVClpJ+f6AR7
+                        ECLCT7up1/63xhv4O1fnxqimFQ8E+4P208UewwI1VBNaFpEy9nXzrith1yrv8iIDGZ3RSAHHAhUA
+                        l2BQjxUjC8yykrmCouuEC/BYHPUCgYEA9+GghdabPd7LvKtcNrhXuXmUr7v6OuqC+VdMCz0HgmdR
+                        WVeOutRZT+ZxBxCBgLRJFnEj6EwoFhO3zwkyjMim4TwWeotUfI0o4KOuHiuzpnWRbqN/C/ohNWLx
+                        +2J6ASQ7zKTxvqhRkImog9/hWuWfBpKLZl6Ae1UlZAFMO/7PSSoDgYQAAoGAby2+38h2rFABb4Nx
+                        tnM5ILCa3bchHsEn/zs7CQy1XG13U2Gfp5FvyS/sPfgcmyMCZQ404lwBke7wLeYxNQMqEJJ450xO
+                        3DJJzZfIwW375ybeRhvv1uk0UX7ljOJJ59gyZKVT/P+AOxpHgvqgSGkHkQTgc9/9WLNbr7ZPBGd+
+                        3cMwCwYHKoZIzjgEAwUAAzAAMC0CFFGIAU2Kmar01vlraRiY9NkZHRtJAhUAhqosw9sJsefhV4yb
+                        IzCy5+Vvbhk='</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:targetRegion
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strTrim(geographic_region)</OCQL>
+                        <linkElement>womlcore:GeographicRegion</linkElement>
+                        <linkField>womlcore:GeographicRegion/@gml:id</linkField>
+                    </sourceExpression>
+                </AttributeMapping>
+
+ 
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:forecastTime
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>forecast_time</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+<!--
+
+
+<AttributeMapping>
+    <targetAttribute>womlcore:usedReferenceData</targetAttribute>
+    <sourceExpression>
+          
+          <linkElement>
+            Recode(strTrim(id_used_reference_data), 
+            womlcore:MeteorologicalAnalysisReference/@gml:id, womlcore:MeteorologicalAnalysisReference,
+            womlcore:NumericalModelRunForecastReference/@gml:id, womlcore:NumericalModelRunForecastReference)
+        </linkElement>
+
+    </sourceExpression>
+    <isMultiple>true</isMultiple>
+</AttributeMapping>
+
+-->
+
+
+
+
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:usedReferenceData
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strTrim(id_used_reference_data)</OCQL>
+                        <linkElement>womlcore:MeteorologicalAnalysisReference</linkElement>
+                        <linkField>womlcore:MeteorologicalAnalysisReference/@gml:id</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:usedReferenceData
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strTrim(id_used_reference_data)</OCQL>
+                        <linkElement>womlcore:NumericalModelRunForecastReference</linkElement>
+                        <linkField>womlcore:NumericalModelRunForecastReference/@gml:id</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:usedReferenceData
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strTrim(id_used_reference_data)</OCQL>
+                        <linkElement>womlcore:RadarImageReference</linkElement>
+                        <linkField>womlcore:RadarImageReference/@gml:id</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:usedReferenceData
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strTrim(id_used_reference_data)</OCQL>
+                        <linkElement>womlcore:WeatherForecastReference</linkElement>
+                        <linkField>womlcore:WeatherForecastReference/@gml:id</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>         
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:usedReferenceData
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strTrim(id_used_reference_data)</OCQL>
+                        <linkElement>womlcore:SatelliteImageReference</linkElement>
+                        <linkField>womlcore:SatelliteImageReference/@gml:id</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+
+
+<!--
+
+                <AttributeMapping>
+                    <targetAttribute>womlcore:sharedObjects/womlcore:ConnectionPoint/gml:pos</targetAttribute>
+                        <sourceExpression>
+                            <OCQL>'63.1945 -7.6639'</OCQL>
+                        </sourceExpression>
+                </AttributeMapping>
+
+
+-->
+
+            </attributeMappings>
+        </FeatureTypeMapping>
+    </typeMappings>
+</as:AppSchemaDataAccess>

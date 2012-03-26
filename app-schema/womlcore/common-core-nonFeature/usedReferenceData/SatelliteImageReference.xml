@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<as:AppSchemaDataAccess xmlns:as="http://www.geotools.org/app-schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geotools.org/app-schema AppSchemaDataAccess.xsd">
+    <namespaces>
+        <Namespace>
+            <prefix>gml</prefix>
+            <uri>http://www.opengis.net/gml/3.2</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlcore</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/core/2011/11/15</uri>
+        </Namespace>
+    </namespaces>
+    <sourceDataStores>
+        <DataStore>
+          <id>datastore</id>
+                                        <parameters>
+                                            <Parameter>
+                                                <name>dbtype</name>
+                                                <value>postgis</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>host</name>
+                                                <value>localhost</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>port</name>
+                                                <value>5432</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>database</name>
+                                                <value>woml</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>user</name>
+                                                <value>postgres</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>passwd</name>
+                                                <value>asd123zzz</value>
+                                            </Parameter>
+                                        </parameters>
+        </DataStore>
+    </sourceDataStores>
+    <targetTypes>
+        <FeatureType>
+           <schemaUri>http://xml.fmi.fi/schema/woml/core/2011/11/15/woml-core.xsd</schemaUri>
+        </FeatureType>
+    </targetTypes>
+    <typeMappings>
+        <FeatureTypeMapping>
+            <sourceDataStore>datastore</sourceDataStore>
+            <sourceType>satellite_image_reference</sourceType>
+            <targetElement>womlcore:SatelliteImageReference</targetElement>
+  
+            <attributeMappings>
+            
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:SatelliteImageReference
+                    </targetAttribute>
+                    <idExpression>
+                        <OCQL>strConcat('satellite_image_reference.',id)</OCQL>
+                    </idExpression>
+                </AttributeMapping>
+                
+            
+                <!-- 
+                     - instrument
+                     - channel
+                     - reference_time
+                -->
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:instrument
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strTrim(instrument)</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:channel
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strTrim(channel)</OCQL>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:referenceTime
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>reference_time</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+   
+   
+            </attributeMappings>
+        </FeatureTypeMapping>
+    </typeMappings>
+</as:AppSchemaDataAccess>

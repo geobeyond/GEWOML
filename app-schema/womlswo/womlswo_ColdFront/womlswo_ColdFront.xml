@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<as:AppSchemaDataAccess xmlns:as="http://www.geotools.org/app-schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geotools.org/app-schema AppSchemaDataAccess.xsd">
+    <namespaces>
+        <Namespace>
+            <prefix>gml</prefix>
+            <uri>http://www.opengis.net/gml/3.2</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlswo</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/swo/2011/11/15</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlcore</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/core/2011/11/15</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>xlink</prefix>
+            <uri>http://www.w3.org/1999/xlink</uri>
+        </Namespace>
+    </namespaces>
+    <includedTypes>
+        <Include>../../womlcore/common-core-nonFeature/TimeInterpolation.xml</Include>
+        <Include>../../womlcore/common-core-nonFeature/elevation.xml</Include>
+ <!--       <Include>../../womlcore/common-core-nonFeature/uncertaintyArea.xml</Include>-->
+    </includedTypes>
+    <sourceDataStores>
+        <DataStore>
+          <id>datastore</id>
+                                        <parameters>
+                                            <Parameter>
+                                                <name>dbtype</name>
+                                                <value>postgis</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>host</name>
+                                                <value>localhost</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>port</name>
+                                                <value>5432</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>database</name>
+                                                <value>woml</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>user</name>
+                                                <value>postgres</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>passwd</name>
+                                                <value>asd123zzz</value>
+                                            </Parameter>
+                                        </parameters>
+        </DataStore>
+    </sourceDataStores>
+    <targetTypes>
+        <FeatureType>
+            <schemaUri>http://xml.fmi.fi/schema/woml/swo/2011/11/15/woml-swo.xsd</schemaUri>
+            <schemaUri>http://xml.fmi.fi/schema/woml/core/2011/11/15/woml-core.xsd</schemaUri>
+        </FeatureType>
+    </targetTypes>
+    <typeMappings>
+        <FeatureTypeMapping>
+            <sourceDataStore>datastore</sourceDataStore>
+            <sourceType>cold_front</sourceType>
+            <targetElement>womlswo:ColdFront</targetElement>
+            <attributeMappings>
+            
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlswo:ColdFront
+                    </targetAttribute>
+                    <idExpression>
+                        <OCQL>gml_id</OCQL>
+                    </idExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        FEATURE_LINK[1]
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>associated</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>gml:validTime</targetAttribute>
+                    <targetAttributeNode>gml:TimePeriodPropertyType</targetAttributeNode>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>gml:validTime/gml:TimePeriod</targetAttribute>
+                    <ClientProperty>
+                        <name>gml:id</name>
+                        <value>time_period_gml_id</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>gml:validTime/gml:TimePeriod/gml:beginPosition</targetAttribute>
+                        <sourceExpression>
+                            <OCQL>time_period_begin_position</OCQL>
+                        </sourceExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>gml:validTime/gml:TimePeriod/gml:endPosition</targetAttribute>
+                        <sourceExpression>
+                            <OCQL>time_period_end_position</OCQL>
+                        </sourceExpression>
+                </AttributeMapping>               
+<!--
+                <AttributeMapping>
+                    <targetAttribute>
+                      gml:name
+                      </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>gml_name</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>codeSpace</name>
+                        <value>gml_name_code_space</value>
+                    </ClientProperty>
+                </AttributeMapping>
+-->
+            <!-- 
+                BasicObjectMetadata
+                simplification: 
+                    1) metaData 
+             -->
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:creationTime
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>creation_time</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>                
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:latestModificationTime 
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>latest_modification_time </OCQL>
+                    </sourceExpression>
+                </AttributeMapping>                
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:shortInfo
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>short_info</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>xml:lang</name>
+                        <value>'EN-en'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:longInfo
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>long_info</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>xml:lang</name>
+                        <value>'EN-en'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+
+            <!--
+                AbstractMeteorologicalObject
+
+            -->
+            
+            
+            <!-- test
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:uncertaintyArea/womlcore:UncertaintyArea/gml:exterior
+                    </targetAttribute>
+                    <sourceExpression>
+                        <inputAttribute>'POLYGON((80 -10,82 -10,72 -22.1,81 -42.1,80 -10))'</inputAttribute>
+                    </sourceExpression>   
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:uncertaintyArea/womlcore:UncertaintyArea/womlcore:probabilityOfBeingLocatedInside
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>'0.5'</OCQL>
+                    </sourceExpression>   
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:uncertaintyArea/womlcore:UncertaintyArea
+                    </targetAttribute>
+                    <ClientProperty>
+                        <name>gml:id</name>
+                        <value>'uArea-1'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+test -->
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:historyInterpolationRule
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>if_then_else(isNull(time_interpolation),'-',time_interpolation) </OCQL>
+                        <linkElement>womlcore:TimeInterpolation</linkElement>
+                        <linkField>womlcore:TimeInterpolation/@gml:id</linkField>
+                    </sourceExpression>
+                </AttributeMapping>
+
+
+
+
+            <!-- 
+                AbstractLineObject     setsrid(LINESTRING(63.1945 -7.6639, 63.2023 -7.401, 63.2572 -7.2757, 63.2772 -7.1757),2398)
+             -->    
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:controlCurve
+                    </targetAttribute>
+                    <sourceExpression>
+                        <inputAttribute>control_curve</inputAttribute>
+                
+                    </sourceExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:startPointConnectsTo
+                    </targetAttribute>
+                    <ClientProperty>
+                        <name>xlink:href</name>
+                        <value>'x:n'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:elevation
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>if_then_else(isNull(elevation),'-',elevation)</OCQL>
+                        <linkElement>womlcore:Elevation</linkElement>
+                        <linkField>womlcore:Elevation/@gml:id</linkField>  
+                    </sourceExpression>
+                </AttributeMapping>                
+
+
+            <!--       <linkField>womlcore:elevation/womlcore:Elevation/@gml:id</linkField>  -->
+           
+           
+           
+           
+           
+            </attributeMappings>
+        </FeatureTypeMapping>
+    </typeMappings>
+</as:AppSchemaDataAccess>

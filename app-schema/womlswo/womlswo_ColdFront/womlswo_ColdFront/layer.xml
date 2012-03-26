@@ -1,0 +1,17 @@
+<layer>
+  <id>womlswo_ColdFront_layer</id>
+  <name>ColdFront</name>
+  <path>/</path>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <name>polygon</name>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>womlswo_ColdFront_featuretype</id>
+  </resource>
+  <enabled>true</enabled>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+</layer>

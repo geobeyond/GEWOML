@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<as:AppSchemaDataAccess xmlns:as="http://www.geotools.org/app-schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geotools.org/app-schema AppSchemaDataAccess.xsd">
+    <namespaces>
+        <Namespace>
+            <prefix>gml</prefix>
+            <uri>http://www.opengis.net/gml/3.2</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlcore</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/core/2011/11/15</uri>
+        </Namespace>
+    </namespaces>
+    <sourceDataStores>
+        <DataStore>
+          <id>datastore</id>
+                                        <parameters>
+                                            <Parameter>
+                                                <name>dbtype</name>
+                                                <value>postgis</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>host</name>
+                                                <value>localhost</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>port</name>
+                                                <value>5432</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>database</name>
+                                                <value>woml</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>user</name>
+                                                <value>postgres</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>passwd</name>
+                                                <value>asd123zzz</value>
+                                            </Parameter>
+                                        </parameters>
+        </DataStore>
+    </sourceDataStores>
+    <targetTypes>
+        <FeatureType>
+           <schemaUri>http://xml.fmi.fi/schema/woml/core/2011/11/15/woml-core.xsd</schemaUri>
+            
+        </FeatureType>
+    </targetTypes>
+    <typeMappings>
+        <FeatureTypeMapping>
+            <sourceDataStore>datastore</sourceDataStore>
+            <sourceType>approval</sourceType>
+            <targetElement>womlcore:Approval</targetElement>
+  
+            <attributeMappings>
+            
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:Approval
+                    </targetAttribute>
+                    <idExpression>
+                        <OCQL>approval_gml_id</OCQL>
+                    </idExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        FEATURE_LINK[3]
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id_object_approved</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+<!--
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:Approval
+                    </targetAttribute>
+                    <ClientProperty>
+                        <name>gml:id</name>
+                        <value>approval_gml_id</value>
+                    </ClientProperty>
+                </AttributeMapping>  
+    -->            
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:approvedBy
+                    </targetAttribute>
+                    <ClientProperty>
+                        <name>gml:id</name>
+                        <value>authority_gml_id</value>
+                    </ClientProperty>
+                </AttributeMapping>                
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:approvedBy/womlcore:Authority/womlcore:authorityId
+                    </targetAttribute>
+                    <sourceExpression>
+                        <inputAttribute>authority_gml_id</inputAttribute>
+                    </sourceExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:approvedBy/womlcore:Authority/womlcore:localizedName 
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>localized_name</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>xml:lang</name>
+                        <value>'EN-en'</value>
+                    </ClientProperty>
+                </AttributeMapping>        
+               
+               
+               
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:approvalTime
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>approval_time</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>                    
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:approvedFor
+                    </targetAttribute>
+                    <sourceExpression>
+                        <inputAttribute>usage_text</inputAttribute>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>      
+               
+
+               
+               <!--
+                <AttributeMapping>
+                    <targetAttribute>
+                        gml:name
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>usage_text</OCQL>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>   
+               -->
+            </attributeMappings>
+        </FeatureTypeMapping>
+    </typeMappings>
+</as:AppSchemaDataAccess>

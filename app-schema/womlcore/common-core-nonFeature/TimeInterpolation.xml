@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<as:AppSchemaDataAccess xmlns:as="http://www.geotools.org/app-schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geotools.org/app-schema AppSchemaDataAccess.xsd">
+    <namespaces>
+        <Namespace>
+            <prefix>gml</prefix>
+            <uri>http://www.opengis.net/gml/3.2</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlcore</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/core/2011/11/15</uri>
+        </Namespace>
+    </namespaces>
+    <sourceDataStores>
+        <DataStore>
+          <id>datastore</id>
+                                        <parameters>
+                                            <Parameter>
+                                                <name>dbtype</name>
+                                                <value>postgis</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>host</name>
+                                                <value>localhost</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>port</name>
+                                                <value>5432</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>database</name>
+                                                <value>woml</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>user</name>
+                                                <value>postgres</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>passwd</name>
+                                                <value>asd123zzz</value>
+                                            </Parameter>
+                                        </parameters>
+        </DataStore>
+    </sourceDataStores>
+    <targetTypes>
+        <FeatureType>
+           <schemaUri>http://xml.fmi.fi/schema/woml/core/2011/11/15/woml-core.xsd</schemaUri>
+        </FeatureType>
+    </targetTypes>
+    <typeMappings>
+        <FeatureTypeMapping>
+            <sourceDataStore>datastore</sourceDataStore>
+            <sourceType>time_interpolation</sourceType>
+            <targetElement>womlcore:TimeInterpolation</targetElement>
+
+
+            <attributeMappings>
+
+               <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:TimeInterpolation
+                    </targetAttribute>
+                    <idExpression>
+                        <OCQL>gml_id</OCQL>
+                    </idExpression>   
+                </AttributeMapping>
+
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:TimeInterpolation/womlcore:method
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>method</OCQL>
+                    </sourceExpression>   
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:TimeInterpolation/womlcore:maxResolution
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>value</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>unit</name>
+                        <value>unit</value>
+                    </ClientProperty>
+                    <ClientProperty>
+                        <name>radix</name>
+                        <value>radix</value>
+                    </ClientProperty>
+                    <ClientProperty>
+                        <name>factor</name>
+                        <value>factor</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+
+
+            </attributeMappings>
+        </FeatureTypeMapping>
+    </typeMappings>
+</as:AppSchemaDataAccess>
