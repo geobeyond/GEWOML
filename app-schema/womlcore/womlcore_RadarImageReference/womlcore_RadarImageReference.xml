@@ -64,7 +64,14 @@
                     </idExpression>
                 </AttributeMapping>
 
-
+                <AttributeMapping>
+                    <targetAttribute>
+                        FEATURE_LINK
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id_obj</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
 
                 <AttributeMapping>
                     <targetAttribute>

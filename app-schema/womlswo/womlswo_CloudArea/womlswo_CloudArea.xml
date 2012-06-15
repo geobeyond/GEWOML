@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<as:AppSchemaDataAccess xmlns:as="http://www.geotools.org/app-schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geotools.org/app-schema AppSchemaDataAccess.xsd">
+    <namespaces>
+        <Namespace>
+            <prefix>gml</prefix>
+            <uri>http://www.opengis.net/gml/3.2</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlswo</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/swo/2011/11/15</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlcore</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/core/2011/11/15</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>xlink</prefix>
+            <uri>http://www.w3.org/1999/xlink</uri>
+        </Namespace>
+    </namespaces>
+    <sourceDataStores>
+        <DataStore>
+          <id>datastore</id>
+                                        <parameters>
+                                            <Parameter>
+                                                <name>dbtype</name>
+                                                <value>postgis</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>host</name>
+                                                <value>localhost</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>port</name>
+                                                <value>5432</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>database</name>
+                                                <value>woml</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>user</name>
+                                                <value>postgres</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>passwd</name>
+                                                <value>asd123zzz</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>Expose primary keys</name>
+                                                <value>true</value>
+                                            </Parameter>
+                                        </parameters>
+        </DataStore>
+    </sourceDataStores>
+    <targetTypes>
+        <FeatureType>
+            <schemaUri>http://xml.fmi.fi/schema/woml/core/2011/11/15/woml-core.xsd</schemaUri>
+        </FeatureType>
+        <FeatureType>
+            <schemaUri>http://xml.fmi.fi/schema/woml/swo/2011/11/15/woml-swo.xsd</schemaUri>    
+        </FeatureType>
+    </targetTypes>
+    <typeMappings>
+        <FeatureTypeMapping>
+            <sourceDataStore>datastore</sourceDataStore>
+            <sourceType>cloud_area</sourceType>
+            <targetElement>womlswo:CloudArea</targetElement>
+            <attributeMappings>
+            
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlswo:CloudArea
+                    </targetAttribute>
+        <!--            <idExpression>
+                        <OCQL>id</OCQL>
+                    </idExpression>
+                    <ClientProperty>
+                        <name>gml:id</name>
+                        <value>id</value>
+                    </ClientProperty>
+            -->    <idExpression>
+                        <OCQL>getId()</OCQL>
+                    </idExpression> </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        FEATURE_LINK
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>associated</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+<!--
+                <AttributeMapping>
+                    <targetAttribute>
+                        gml:name 
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strTrim(id)</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+         
+                <AttributeMapping>
+                    <targetAttribute>
+                        gml:description
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strTrim(id_interior)</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+         
+                                    
+    -->     
+         
+         
+         
+         
+<!-- 
+--><!--
+         </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        gml:name 
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strTrim(id)</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+-->
+
+            <!-- 
+                BasicObjectMetadata
+                simplification: 
+                    1) metaData omitted
+             -->
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:creationTime
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>creation_time</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>                
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:latestModificationTime 
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>latest_modification_time </OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:shortInfo
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>short_info</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>xml:lang</name>
+                        <value>'Ita-it'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:longInfo
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>long_info</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>xml:lang</name>
+                        <value>'ITA-it'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+            <!--
+                AbstractMeteorologicalObject
+                simplification:
+                    1) uncertaintyArea
+            -->
+            
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:historyInterpolationRule
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>if_then_else(isNull(time_interpolation),'-',strTrim(time_interpolation))</OCQL>
+                        <linkElement>womlcore:TimeInterpolation</linkElement>
+                        <linkField>womlcore:TimeInterpolation/@gml:id</linkField>
+                    </sourceExpression>
+                </AttributeMapping>
+
+            <!-- 
+                AbstractSurfaceObject   ST_SetSRID('POLYGON((46.800059 -3.52295,45.95115 16.076659,34.741612 10.847167,46.800059 -3.52295), (44.809122 5.485839,45.182037 8.078612,43.165123 7.331542,44.809122 5.485839),(43.834527 14.7583,43.834527 14.978026,42.811522 14.802245,43.834527 14.7583))',2398)
+             -->    
+
+           <!--     <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:controlSurface
+                    </targetAttribute>
+                    <sourceExpression>
+                        <inputAttribute>polygon</inputAttribute>
+                      <inputAttribute>'POLYGON((84 -10,82 -10,72 -22.1,81 -42.1,84 -10),(63.1945 -7.6639,63.2023 -7.401,63.2572 -7.2757,63.2772 -7.1757,63.1945 -7.6639),(63.1945 -7.6639,63.2023 -7.201,62.2572 -7.2757,63.2772 -7.1757,63.1945 -7.6639))'</inputAttribute>
+  -->                    
+                      <!--               <inputAttribute>'POLYHEDRALSURFACE( ((0 0 0, 0 0 1, 0 1 1, 0 1 0, 0 0 0)),((0 0 0, 0 1 0, 1 1 0, 1 0 0, 0 0 0)), ((0 0 0, 1 0 0, 1 0 1, 0 0 1, 0 0 0)), ((1 1 0, 1 1 1, 1 0 1, 1 0 0, 1 1 0)), ((0 1 0, 0 1 1, 1 1 1, 1 1 0, 0 1 0)), ((0 0 1, 1 0 1, 1 1 1, 0 1 1, 0 0 1)) )'</inputAttribute>
+           -->         <!--  </sourceExpression>
+             </AttributeMapping>
+-->
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:controlSurface
+                    </targetAttribute>
+                    <idExpression>
+                        <OCQL>strConcat('surface.', id)
+                        </OCQL>
+                    </idExpression>                    
+                    <sourceExpression>
+                        <inputAttribute>control_surface</inputAttribute>
+                    </sourceExpression>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:targetRegionReference
+                    </targetAttribute>
+                    <sourceExpression>
+                        <ocql>strTrim(region_reference)</ocql>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>scheme</name>
+                        <value>strTrim(scheme)</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+
+
+<!--                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:targetRegion
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strConcat('geographic_region.',geographic_region)</OCQL>
+                        <linkElement>womlcore:GeographicRegion</linkElement>
+                        <linkField>womlcore:GeographicRegion/@gml:id</linkField>
+                    </sourceExpression>
+                </AttributeMapping>
+-->
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:elevation
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>if_then_else(isNull(elevation),'-',strTrim(elevation))</OCQL>
+                        <linkElement>womlcore:Elevation</linkElement>
+                        <linkField>womlcore:Elevation/@gml:id</linkField>  
+                    </sourceExpression>
+                </AttributeMapping>   
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlswo:cloudType
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>strTrim(cloud_type)</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>   
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlswo:cloudCoverPercent
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>cover_percent</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>   
+                
+                
+                
+<!--ok                
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlswo:innerArea
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>if_then_else(isNull(id_interior),strTrim(6),strTrim(id_interior))</OCQL>
+                        <linkElement>womlswo:CloudArea</linkElement>
+                        <linkField>gml:name</linkField>  
+                    </sourceExpression>
+                </AttributeMapping>
+-->
+
+
+            <!--            <linkField>womlswo:CloudArea/@gml:id</linkField>  -->
+
+<!--
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlswo:innerArea/womlswo:CloudArea
+                    </targetAttribute>   
+                       <ClientProperty>
+
+                        <name>gml:id</name>
+                        <value>'EN-en'</value>
+                    </ClientProperty>
+
+                </AttributeMapping>   
+
+
+
+              <AttributeMapping>
+                    <targetAttribute>
+                        womlswo:innerArea/womlswo:CloudArea/womlswo:cloudCoverPercent
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>'0.4'</OCQL>
+                    </sourceExpression>         
+                    
+                </AttributeMapping>   
+
+-->
+         
+
+            </attributeMappings>
+        </FeatureTypeMapping>
+    </typeMappings>
+</as:AppSchemaDataAccess>

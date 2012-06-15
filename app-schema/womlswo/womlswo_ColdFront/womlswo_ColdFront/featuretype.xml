@@ -5,8 +5,8 @@
     <namespace>
         <id>womlswo_namespace</id>
     </namespace>
-    <title>... TITLE ...</title>
-    <abstract>... ABSTRACT ...</abstract>
+    <title>Fronte freddo</title>
+    <abstract>Questo tipo di feature rappresenta un fronte freddo</abstract>
     <srs>EPSG:4326</srs>
     <latLonBoundingBox>
         <minx>-180</minx>

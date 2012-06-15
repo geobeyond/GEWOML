@@ -1,0 +1,13 @@
+<dataStore>
+    <id>womlswo_PolarCyclone_datastore</id>
+    <name>womlswo_PolarCyclone</name>
+    <enabled>true</enabled>
+    <workspace>
+        <id>womlswo_workspace</id>
+    </workspace>
+    <connectionParameters>
+        <entry key="namespace">http://xml.fmi.fi/namespace/woml/swo/2011/11/15</entry>
+        <entry key="url">file:workspaces/womlswo/womlswo_PolarCyclone/womlswo_PolarCyclone.xml</entry>
+        <entry key="dbtype">app-schema</entry>
+    </connectionParameters>
+</dataStore>

@@ -1,0 +1,17 @@
+<layer>
+  <id>womlswo_Mesocyclone_layer</id>
+  <name>Mesocyclone</name>
+  <path>/</path>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <name>polygon</name>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>womlswo_Mesocyclone_featuretype</id>
+  </resource>
+  <enabled>true</enabled>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+</layer>

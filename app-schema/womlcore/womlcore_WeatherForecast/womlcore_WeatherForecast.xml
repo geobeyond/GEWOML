@@ -14,20 +14,16 @@
         <Namespace>
             <prefix>womlswo</prefix>
             <uri>http://xml.fmi.fi/namespace/woml/swo/2011/11/15</uri>
-        </Namespace>        
+        </Namespace>
+        <Namespace>
+            <prefix>xlink</prefix>
+            <uri>http://www.w3.org/1999/xlink</uri>
+        </Namespace>
         <Namespace>
             <prefix>dsig</prefix>
             <uri>http://www.w3.org/2000/09/xmldsig#</uri>
         </Namespace>
     </namespaces>
-    <includedTypes>
-        <Include>../common-core-nonFeature/approval.xml</Include>
-        <Include>../common-core-nonFeature/GeographicRegion.xml</Include>
-        <Include>../common-core-nonFeature/usedReferenceData/MeteorologicalAnalysisReference.xml</Include>
-        <Include>../common-core-nonFeature/usedReferenceData/NumericalModelRunForecastReference.xml</Include>
-        <Include>../common-core-nonFeature/usedReferenceData/SatelliteImageReference.xml</Include>
-        <Include>../common-core-nonFeature/usedReferenceData/WeatherForecastReference.xml</Include>
-    </includedTypes>    
    <sourceDataStores>
         <DataStore>
           <id>datastore</id>
@@ -36,11 +32,7 @@
                                                 <name>dbtype</name>
                                                 <value>postgis</value>
                                             </Parameter>
-                                   <!--         <Parameter>
-                                                <name>jndiReferenceName</name>
-                                                <value>java:comp/env/jdbc/woml</value>
-                                            </Parameter>                        
-                                       -->     <Parameter>
+                                            <Parameter>
                                                 <name>host</name>
                                                 <value>localhost</value>
                                             </Parameter>
@@ -66,12 +58,15 @@
     <catalog>../../../schemas/catalog.xml</catalog>
     <targetTypes>
         <FeatureType>
-            <schemaUri>http://xml.fmi.fi/schema/woml/swo/2011/11/15/woml-swo.xsd</schemaUri>
             <schemaUri>http://xml.fmi.fi/schema/woml/core/2011/11/15/woml-core.xsd</schemaUri>
+        </FeatureType>
+        <FeatureType>
+            <schemaUri>http://xml.fmi.fi/schema/woml/swo/2011/11/15/woml-swo.xsd</schemaUri>    
         </FeatureType>
     </targetTypes>
     <typeMappings>
         <FeatureTypeMapping>
+
             <sourceDataStore>datastore</sourceDataStore>
             <sourceType>weather_forecast</sourceType>
             <targetElement>womlcore:WeatherForecast</targetElement>
@@ -82,11 +77,183 @@
                         womlcore:WeatherForecast
                     </targetAttribute>
                     <idExpression>
-                        <OCQL>id</OCQL>
+                        <OCQL>strConcat('WeatherForecast.',id)</OCQL>
                     </idExpression>
                 </AttributeMapping>
 
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:PointMeteorologicalSymbol</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
 
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:DirectionalMeteorologicalSymbol</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:LowPressureCenter</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+                
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:Mesolow</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:PolarLow</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:Cyclone</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:Mesocyclone</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:PolarCyclone</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:TropicalCyclone</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>       
+                
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:HighPressureCenter</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:Anticyclone</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping> 
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:Antimesocyclone</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>    
+
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:Storm</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:ConvectiveStorm</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
 
                 <AttributeMapping>
                     <targetAttribute>
@@ -95,7 +262,111 @@
                     <sourceExpression>
                         <OCQL>id</OCQL>
                         <linkElement>womlswo:ColdFront</linkElement>
-                        <linkField>FEATURE_LINK[1]</linkField>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:WarmFront</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:Ridge</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:Trough</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+                
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:UpperTrough</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>                
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:ColdAdvection</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:WarmAdvection</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:OccludedFront</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
+                    </sourceExpression>
+                    <isMultiple>true</isMultiple>
+                </AttributeMapping>
+
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:member
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>id</OCQL>
+                        <linkElement>womlswo:SurfacePrecipitationArea</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
                     </sourceExpression>
                     <isMultiple>true</isMultiple>
                 </AttributeMapping>
@@ -106,12 +377,12 @@
                     </targetAttribute>
                     <sourceExpression>
                         <OCQL>id</OCQL>
-                        <linkElement>womlswo:WarmFront</linkElement>
-                        <linkField>FEATURE_LINK[1]</linkField>
+                        <linkElement>womlswo:CloudArea</linkElement>
+                        <linkField>FEATURE_LINK</linkField>
                     </sourceExpression>
                     <isMultiple>true</isMultiple>
                 </AttributeMapping>
-
+                
                 <!-- 
                     womlcore:BasicObjectMetaData
                     - creationTime
@@ -139,7 +410,6 @@
                     </sourceExpression>
                 </AttributeMapping>
 
-
                 <AttributeMapping>
                     <targetAttribute>
                         womlcore:shortInfo
@@ -152,7 +422,8 @@
                         <value>'Ita-it'</value>
                     </ClientProperty>
                 </AttributeMapping>
-                
+
+    
                 <AttributeMapping>
                     <targetAttribute>
                         womlcore:longInfo
@@ -166,17 +437,8 @@
                     </ClientProperty>
                 </AttributeMapping>
 
-<!--
-
-                <AttributeMapping>
-                    <targetAttribute>womlcore:sharedObjects/womlcore:ConnectionPoint/gml:pos</targetAttribute>
-                        <sourceExpression>
-                            <OCQL>'63.1945 -7.6639'</OCQL>
-                        </sourceExpression>
-                </AttributeMapping>
 
 
--->
 
                 <!-- 
                     gml:validTime
@@ -222,7 +484,7 @@
                     <sourceExpression>
                         <OCQL>id</OCQL>
                         <linkElement>womlcore:Approval</linkElement>
-                        <linkField>FEATURE_LINK[3]</linkField>
+                        <linkField>FEATURE_LINK</linkField>
                     </sourceExpression>
                     <isMultiple>true</isMultiple>
                 </AttributeMapping>
@@ -231,86 +493,22 @@
                     envelopedSignature
                 -->
 
-                <AttributeMapping>
-                    <targetAttribute>
-                        womlcore:envelopedSignature/dsig:Signature/dsig:SignedInfo/dsig:Reference/dsig:DigestValue
-                    </targetAttribute>
-                    <sourceExpression>
-                        <OCQL>'mo95+b184lAts/mjwd3Qo20fUiSmQF7qo2mJmKk9msE='</OCQL>
-                    </sourceExpression>
-                </AttributeMapping>
-                
-                
-                <!-- x -->
-                <AttributeMapping>
-                    <targetAttribute>
-                        womlcore:envelopedSignature/dsig:Signature/dsig:SignedInfo/dsig:CanonicalizationMethod
-                    </targetAttribute>
-                    <ClientProperty>
-                        <name>Algorithm</name>
-                        <value>strTrim('http://www.w3.org/TR/2001/REC-xml-c14n-20010315')</value>
-                    </ClientProperty>
-                    <sourceExpression>
-                        <OCQL>''</OCQL>
-                    </sourceExpression>                    
-                </AttributeMapping>
-
-                <AttributeMapping>
-                    <targetAttribute>
-                        womlcore:envelopedSignature/dsig:Signature/dsig:SignatureValue
-                    </targetAttribute>
-                    <sourceExpression>
-                        <OCQL>'mo95+b184lAts/mjwd3Qo20fUiSmQF7qo2mJmKk9msE='</OCQL>
-                    </sourceExpression>
-                </AttributeMapping>
-
-                <AttributeMapping>
-                    <targetAttribute>
-                        womlcore:envelopedSignature/dsig:Signature/dsig:KeyInfo/dsig:X509Data/dsig:X509SubjectName
-                    </targetAttribute>
-                    <sourceExpression>
-                        <OCQL>'CN=test.user@organization.org,OU=Dev,O=Acme,L=Helsinki,ST=Uusimaa,C=FI'</OCQL>
-                    </sourceExpression>
-                </AttributeMapping>
-                
-                <AttributeMapping>
-                    <targetAttribute>
-                        womlcore:envelopedSignature/dsig:Signature/dsig:KeyInfo/dsig:X509Data/dsig:X509Certificate
-                    </targetAttribute>
-                    <sourceExpression>
-                        <OCQL>'MIIDIjCCAt+gAwIBAgIETnr6QTALBgcqhkjOOAQDBQAwdDELMAkGA1UEBhMCRkkxEDAOBgNVBAgT
-                        B1V1c2ltYWExETAPBgNVBAcTCEhlbHNpbmtpMQ0wCwYDVQQKEwRBY21lMQwwCgYDVQQLEwNEZXYx
-                        IzAhBgNVBAMMGnRlc3QudXNlckBvcmdhbml6YXRpb24ub3JnMB4XDTExMDkyMjA5MDUwNVoXDTE2
-                        MDIwODA5MDUwNVowdDELMAkGA1UEBhMCRkkxEDAOBgNVBAgTB1V1c2ltYWExETAPBgNVBAcTCEhl
-                        bHNpbmtpMQ0wCwYDVQQKEwRBY21lMQwwCgYDVQQLEwNEZXYxIzAhBgNVBAMMGnRlc3QudXNlckBv
-                        cmdhbml6YXRpb24ub3JnMIIBtzCCASwGByqGSM44BAEwggEfAoGBAP1/U4EddRIpUt9KnC7s5Of2
-                        EbdSPO9EAMMeP4C2USZpRV1AIlH7WT2NWPq/xfW6MPbLm1Vs14E7gB00b/JmYLdrmVClpJ+f6AR7
-                        ECLCT7up1/63xhv4O1fnxqimFQ8E+4P208UewwI1VBNaFpEy9nXzrith1yrv8iIDGZ3RSAHHAhUA
-                        l2BQjxUjC8yykrmCouuEC/BYHPUCgYEA9+GghdabPd7LvKtcNrhXuXmUr7v6OuqC+VdMCz0HgmdR
-                        WVeOutRZT+ZxBxCBgLRJFnEj6EwoFhO3zwkyjMim4TwWeotUfI0o4KOuHiuzpnWRbqN/C/ohNWLx
-                        +2J6ASQ7zKTxvqhRkImog9/hWuWfBpKLZl6Ae1UlZAFMO/7PSSoDgYQAAoGAby2+38h2rFABb4Nx
-                        tnM5ILCa3bchHsEn/zs7CQy1XG13U2Gfp5FvyS/sPfgcmyMCZQ404lwBke7wLeYxNQMqEJJ450xO
-                        3DJJzZfIwW375ybeRhvv1uk0UX7ljOJJ59gyZKVT/P+AOxpHgvqgSGkHkQTgc9/9WLNbr7ZPBGd+
-                        3cMwCwYHKoZIzjgEAwUAAzAAMC0CFFGIAU2Kmar01vlraRiY9NkZHRtJAhUAhqosw9sJsefhV4yb
-                        IzCy5+Vvbhk='</OCQL>
-                    </sourceExpression>
-                </AttributeMapping>
-
                 <!-- 
                     targetRegion
                 -->
-
+                
                 <AttributeMapping>
                     <targetAttribute>
                         womlcore:targetRegion
                     </targetAttribute>
                     <sourceExpression>
-                        <OCQL>strTrim(geographic_region)</OCQL>
+                        <OCQL>strConcat('geographic_region.',id_geographic_region)</OCQL>
                         <linkElement>womlcore:GeographicRegion</linkElement>
                         <linkField>womlcore:GeographicRegion/@gml:id</linkField>
                     </sourceExpression>
+                    <isMultiple>true</isMultiple>
                 </AttributeMapping>
-
+                
                 <!-- 
                     forecastTime
                 -->
@@ -324,25 +522,6 @@
                     </sourceExpression>
                 </AttributeMapping>
 
-<!--
-
-
-<AttributeMapping>
-    <targetAttribute>womlcore:usedReferenceData</targetAttribute>
-    <sourceExpression>
-          
-          <linkElement>
-            Recode(strTrim(id_used_reference_data), 
-            womlcore:MeteorologicalAnalysisReference/@gml:id, womlcore:MeteorologicalAnalysisReference,
-            womlcore:NumericalModelRunForecastReference/@gml:id, womlcore:NumericalModelRunForecastReference)
-        </linkElement>
-
-    </sourceExpression>
-    <isMultiple>true</isMultiple>
-</AttributeMapping>
-
--->
-
 
                 <!-- 
                     usedReferenceData
@@ -355,9 +534,9 @@
                         womlcore:usedReferenceData
                     </targetAttribute>
                     <sourceExpression>
-                        <OCQL>strTrim(id_used_reference_data)</OCQL>
+                        <OCQL>id</OCQL>
                         <linkElement>womlcore:MeteorologicalAnalysisReference</linkElement>
-                        <linkField>womlcore:MeteorologicalAnalysisReference/@gml:id</linkField>
+                        <linkField>FEATURE_LINK</linkField>
                     </sourceExpression>
                     <isMultiple>true</isMultiple>
                 </AttributeMapping>
@@ -368,9 +547,9 @@
                         womlcore:usedReferenceData
                     </targetAttribute>
                     <sourceExpression>
-                        <OCQL>strTrim(id_used_reference_data)</OCQL>
+                        <OCQL>id</OCQL>
                         <linkElement>womlcore:NumericalModelRunForecastReference</linkElement>
-                        <linkField>womlcore:NumericalModelRunForecastReference/@gml:id</linkField>
+                        <linkField>FEATURE_LINK</linkField>
                     </sourceExpression>
                     <isMultiple>true</isMultiple>
                 </AttributeMapping>
@@ -380,9 +559,9 @@
                         womlcore:usedReferenceData
                     </targetAttribute>
                     <sourceExpression>
-                        <OCQL>strTrim(id_used_reference_data)</OCQL>
+                        <OCQL>id</OCQL>
                         <linkElement>womlcore:RadarImageReference</linkElement>
-                        <linkField>womlcore:RadarImageReference/@gml:id</linkField>
+                        <linkField>FEATURE_LINK</linkField>
                     </sourceExpression>
                     <isMultiple>true</isMultiple>
                 </AttributeMapping>
@@ -392,9 +571,9 @@
                         womlcore:usedReferenceData
                     </targetAttribute>
                     <sourceExpression>
-                        <OCQL>strTrim(id_used_reference_data)</OCQL>
+                        <OCQL>id</OCQL>
                         <linkElement>womlcore:WeatherForecastReference</linkElement>
-                        <linkField>womlcore:WeatherForecastReference/@gml:id</linkField>
+                        <linkField>FEATURE_LINK</linkField>
                     </sourceExpression>
                     <isMultiple>true</isMultiple>
                 </AttributeMapping>         
@@ -404,14 +583,12 @@
                         womlcore:usedReferenceData
                     </targetAttribute>
                     <sourceExpression>
-                        <OCQL>strTrim(id_used_reference_data)</OCQL>
+                        <OCQL>id</OCQL>
                         <linkElement>womlcore:SatelliteImageReference</linkElement>
-                        <linkField>womlcore:SatelliteImageReference/@gml:id</linkField>
+                        <linkField>FEATURE_LINK</linkField>
                     </sourceExpression>
                     <isMultiple>true</isMultiple>
                 </AttributeMapping>
-
-
 
 
 

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<as:AppSchemaDataAccess xmlns:as="http://www.geotools.org/app-schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geotools.org/app-schema AppSchemaDataAccess.xsd">
+    <namespaces>
+        <Namespace>
+            <prefix>gml</prefix>
+            <uri>http://www.opengis.net/gml/3.2</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlswo</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/swo/2011/11/15</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlcore</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/core/2011/11/15</uri>
+        </Namespace>
+    </namespaces>
+    <sourceDataStores>
+        <DataStore>
+          <id>datastore</id>
+                                        <parameters>
+                                            <Parameter>
+                                                <name>dbtype</name>
+                                                <value>postgis</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>host</name>
+                                                <value>localhost</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>port</name>
+                                                <value>5432</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>database</name>
+                                                <value>woml</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>user</name>
+                                                <value>postgres</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>passwd</name>
+                                                <value>asd123zzz</value>
+                                            </Parameter>
+                                        </parameters>
+        </DataStore>
+    </sourceDataStores>
+    <targetTypes>
+        <FeatureType>
+            <schemaUri>http://xml.fmi.fi/schema/woml/core/2011/11/15/woml-core.xsd</schemaUri>
+        </FeatureType>
+        <FeatureType>
+            <schemaUri>http://xml.fmi.fi/schema/woml/swo/2011/11/15/woml-swo.xsd</schemaUri>    
+        </FeatureType>
+    </targetTypes>
+    <typeMappings>
+        <FeatureTypeMapping>
+            <sourceDataStore>datastore</sourceDataStore>
+            <sourceType>polar_low</sourceType>
+            <targetElement>womlswo:PolarLow</targetElement>
+            <attributeMappings>
+            
+            
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlswo:PolarLow
+                    </targetAttribute>
+                    <idExpression>
+                        <OCQL>strConcat('PolarLow.',id)</OCQL>
+                    </idExpression>
+                </AttributeMapping>
+            
+    
+                <AttributeMapping>
+                    <targetAttribute>
+                        FEATURE_LINK
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>associated</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+            <!-- 
+                BasicObjectMetadata
+                simplification: 
+                    1) metaData omitted
+            -->
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:creationTime
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>creation_time</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>                
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:latestModificationTime 
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>latest_modification_time </OCQL>
+                    </sourceExpression>
+                </AttributeMapping>                
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:shortInfo
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>short_info</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>xml:lang</name>
+                        <value>'Ita'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:longInfo
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>long_info</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>xml:lang</name>
+                        <value>'Ita'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+                
+            <!--
+                AbstractMeteorologicalObject
+                simplification:
+                    1) uncertaintyArea
+            -->
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:historyInterpolationRule
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>if_then_else(isNull(time_interpolation),'-',strConcat('time_interpolation.',time_interpolation))</OCQL>
+                        <linkElement>womlcore:TimeInterpolation</linkElement>
+                        <linkField>womlcore:TimeInterpolation/@gml:id</linkField>
+                    </sourceExpression>
+                </AttributeMapping>
+
+            <!--
+                AbstractPoinObject
+                simplification:
+                    -
+            -->
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:controlPoint
+                    </targetAttribute>
+                    <idExpression>
+                        <OCQL>strConcat('point.', id)
+                        </OCQL>
+                    </idExpression>
+                    <sourceExpression>
+                        <OCQL>control_point</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:priority
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>priority</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:effectiveRadius
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>radius</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>uom</name>
+                        <value>radius_uom</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+            <!--
+                AbstractPressureCenter
+                simplification:
+                    -
+            -->
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlswo:tendency
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>tendency</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlswo:maximumWindSpeed
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>max_wind_speed</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>uom</name>
+                        <value>wind_uom</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+            </attributeMappings>
+        </FeatureTypeMapping>
+    </typeMappings>
+</as:AppSchemaDataAccess>

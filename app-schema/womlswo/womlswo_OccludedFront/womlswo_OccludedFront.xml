@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<as:AppSchemaDataAccess xmlns:as="http://www.geotools.org/app-schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geotools.org/app-schema AppSchemaDataAccess.xsd">
+    <namespaces>
+        <Namespace>
+            <prefix>gml</prefix>
+            <uri>http://www.opengis.net/gml/3.2</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlswo</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/swo/2011/11/15</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>womlcore</prefix>
+            <uri>http://xml.fmi.fi/namespace/woml/core/2011/11/15</uri>
+        </Namespace>
+    </namespaces>
+
+    <sourceDataStores>
+        <DataStore>
+          <id>datastore</id>
+                                        <parameters>
+                                            <Parameter>
+                                                <name>dbtype</name>
+                                                <value>postgis</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>host</name>
+                                                <value>localhost</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>port</name>
+                                                <value>5432</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>database</name>
+                                                <value>woml</value>
+                                       </Parameter>
+                                            <Parameter>
+                                                <name>user</name>
+                                                <value>postgres</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>passwd</name>
+                                                <value>asd123zzz</value>
+                                            </Parameter>
+                                            <Parameter>
+                                                <name>Expose primary keys</name>
+                                                <value>true</value>
+                                            </Parameter>
+                                        </parameters>
+        </DataStore>
+    </sourceDataStores>
+    <targetTypes>
+        <FeatureType>
+            <schemaUri>http://xml.fmi.fi/schema/woml/core/2011/11/15/woml-core.xsd</schemaUri>
+        </FeatureType>
+        <FeatureType>
+            <schemaUri>http://xml.fmi.fi/schema/woml/swo/2011/11/15/woml-swo.xsd</schemaUri>    
+        </FeatureType>
+    </targetTypes>
+    <typeMappings>
+        <FeatureTypeMapping>
+            <sourceDataStore>datastore</sourceDataStore>
+            <sourceType>occluded_front</sourceType>
+            <targetElement>womlswo:OccludedFront</targetElement>
+            <attributeMappings>
+            
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlswo:OccludedFront
+                    </targetAttribute>
+                    <idExpression>
+                        <OCQL>getId()</OCQL>
+                    </idExpression>                    
+                </AttributeMapping>
+
+
+ 
+                <AttributeMapping>
+                    <targetAttribute>
+                        FEATURE_LINK
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>associated</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+
+            <!-- 
+                BasicObjectMetadata
+                simplification: 
+                    1) metaData omitted
+             -->
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:creationTime
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>creation_time</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>                
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:latestModificationTime 
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>latest_modification_time </OCQL>
+                    </sourceExpression>
+                </AttributeMapping>                
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:shortInfo
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>short_info</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>xml:lang</name>
+                        <value>'Ita-it'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:longInfo
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>long_info</OCQL>
+                    </sourceExpression>
+                    <ClientProperty>
+                        <name>xml:lang</name>
+                        <value>'ITA-it'</value>
+                    </ClientProperty>
+                </AttributeMapping>
+
+
+            <!--
+                AbstractMeteorologicalObject
+                simplification:
+                    1) uncertaintyArea
+            -->
+        
+
+
+
+
+
+            <!-- 
+                AbstractLineObject     setsrid(LINESTRING(63.1945 -7.6639, 63.2023 -7.401, 63.2572 -7.2757, 63.2772 -7.1757),2398)
+             -->    
+
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlcore:controlCurve
+                    </targetAttribute>
+                    <idExpression>
+                        <OCQL>strConcat('line.', id)
+                        </OCQL>
+                    </idExpression>
+                    <sourceExpression>
+                        <inputAttribute>control_curve</inputAttribute>
+                    </sourceExpression>
+                </AttributeMapping>
+
+
+                
+                <!--
+                    OccludedFrontType
+                -->
+                
+                <AttributeMapping>
+                    <targetAttribute>
+                        womlswo:stationary
+                    </targetAttribute>
+                    <sourceExpression>
+                        <OCQL>stationary</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>                
+
+
+  
+            </attributeMappings>
+        </FeatureTypeMapping>
+    </typeMappings>
+</as:AppSchemaDataAccess>

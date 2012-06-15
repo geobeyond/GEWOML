@@ -1,0 +1,13 @@
+<dataStore>
+    <id>womlcore_GeographicRegion_datastore</id>
+    <name>womlcore_GeographicRegion</name>
+    <enabled>true</enabled>
+    <workspace>
+        <id>womlcore_workspace</id>
+    </workspace>
+    <connectionParameters>
+        <entry key="namespace">http://xml.fmi.fi/namespace/woml/core/2011/11/15</entry>
+        <entry key="url">file:workspaces/womlcore/womlcore_GeographicRegion/womlcore_GeographicRegion.xml</entry>
+        <entry key="dbtype">app-schema</entry>
+    </connectionParameters>
+</dataStore>

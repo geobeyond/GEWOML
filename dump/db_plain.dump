@@ -45,6 +45,16 @@ CREATE DOMAIN amoc_type AS character(32)
 ALTER DOMAIN public.amoc_type OWNER TO postgres;
 
 --
+-- Name: apc_type; Type: DOMAIN; Schema: public; Owner: postgres
+--
+
+CREATE DOMAIN apc_type AS character(32)
+	CONSTRAINT check_type_ CHECK (((((((((((VALUE ~ 'Mesolow'::text) OR (VALUE ~ 'PolarLow'::text)) OR (VALUE ~ 'Mesocyclone'::text)) OR (VALUE ~ 'PolarCyclone'::text)) OR (VALUE ~ 'TropicalCyclone'::text)) OR (VALUE ~ 'Antimesocyclone'::text)) OR (VALUE ~ 'Anticyclone'::text)) OR (VALUE ~ 'LowPressureCenter'::text)) OR (VALUE ~ 'HighPressureCenter'::text)) OR (VALUE ~ 'Cyclone'::text)));
+
+
+ALTER DOMAIN public.apc_type OWNER TO postgres;
+
+--
 -- Name: box2d; Type: SHELL TYPE; Schema: public; Owner: postgres
 --
 
@@ -524,6 +534,16 @@ CREATE TYPE pgis_abs (
 ALTER TYPE public.pgis_abs OWNER TO postgres;
 
 --
+-- Name: point_ms_type; Type: DOMAIN; Schema: public; Owner: postgres
+--
+
+CREATE DOMAIN point_ms_type AS character(32)
+	CONSTRAINT storm_type_check CHECK (((VALUE ~ 'PointMeteorologicalSymbol'::text) OR (VALUE ~ 'DirectionalMeteorologicalSymbol'::text)));
+
+
+ALTER DOMAIN public.point_ms_type OWNER TO postgres;
+
+--
 -- Name: spheroid; Type: SHELL TYPE; Schema: public; Owner: postgres
 --
 
@@ -566,6 +586,16 @@ CREATE TYPE spheroid (
 
 
 ALTER TYPE public.spheroid OWNER TO postgres;
+
+--
+-- Name: storm_type; Type: DOMAIN; Schema: public; Owner: postgres
+--
+
+CREATE DOMAIN storm_type AS character(16)
+	CONSTRAINT storm_type_check CHECK (((VALUE ~ 'Storm'::text) OR (VALUE ~ 'ConvectiveStorm'::text)));
+
+
+ALTER DOMAIN public.storm_type OWNER TO postgres;
 
 --
 -- Name: time_interpolation_method_type; Type: DOMAIN; Schema: public; Owner: postgres
@@ -13634,39 +13664,77 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE abstract_line_object (
-    gml_name_code_space character(128),
     creation_time timestamp with time zone NOT NULL,
     latest_modification_time timestamp with time zone,
     short_info character(128),
     long_info character(4096),
-    time_period_gml_id character(128),
-    time_period_begin_position timestamp with time zone,
-    time_period_end_position timestamp with time zone,
-    gml_id character(128) NOT NULL,
-    associated character(64),
     control_curve geometry,
-    start_point_connects_to character(128),
-    type alo_type,
-    end_point_connects_to character(128),
-    elevation character(128),
-    time_interpolation character(128)
+    associated integer,
+    id integer NOT NULL,
+    time_interpolation integer,
+    elevation integer,
+    type alo_type NOT NULL
 );
 
 
 ALTER TABLE public.abstract_line_object OWNER TO postgres;
 
 --
+-- Name: abstract_pressure_center; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE abstract_pressure_center (
+    id integer NOT NULL,
+    type apc_type NOT NULL,
+    associated integer,
+    creation_time timestamp with time zone NOT NULL,
+    latest_modification_time timestamp with time zone,
+    short_info character(128),
+    long_info character(4096),
+    time_interpolation integer,
+    control_point geometry NOT NULL,
+    priority integer,
+    radius double precision,
+    radius_uom character(32),
+    tendency character(32) NOT NULL,
+    max_wind_speed double precision,
+    wind_uom character(32)
+);
+
+
+ALTER TABLE public.abstract_pressure_center OWNER TO postgres;
+
+--
+-- Name: anticyclone; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW anticyclone AS
+    SELECT abstract_pressure_center.id, abstract_pressure_center.associated, abstract_pressure_center.creation_time, abstract_pressure_center.latest_modification_time, abstract_pressure_center.short_info, abstract_pressure_center.long_info, abstract_pressure_center.time_interpolation, abstract_pressure_center.control_point, abstract_pressure_center.priority, abstract_pressure_center.radius, abstract_pressure_center.radius_uom, abstract_pressure_center.tendency, abstract_pressure_center.max_wind_speed, abstract_pressure_center.wind_uom FROM abstract_pressure_center WHERE ((abstract_pressure_center.type)::bpchar = 'Anticyclone'::bpchar);
+
+
+ALTER TABLE public.anticyclone OWNER TO postgres;
+
+--
+-- Name: antimesocyclone; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW antimesocyclone AS
+    SELECT abstract_pressure_center.id, abstract_pressure_center.associated, abstract_pressure_center.creation_time, abstract_pressure_center.latest_modification_time, abstract_pressure_center.short_info, abstract_pressure_center.long_info, abstract_pressure_center.time_interpolation, abstract_pressure_center.control_point, abstract_pressure_center.priority, abstract_pressure_center.radius, abstract_pressure_center.radius_uom, abstract_pressure_center.tendency, abstract_pressure_center.max_wind_speed, abstract_pressure_center.wind_uom FROM abstract_pressure_center WHERE ((abstract_pressure_center.type)::bpchar = 'Antimesocyclone'::bpchar);
+
+
+ALTER TABLE public.antimesocyclone OWNER TO postgres;
+
+--
 -- Name: approval_info; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE approval_info (
-    id character(32) NOT NULL,
-    approval_gml_id character(128),
     authority_gml_id character(128),
     authority_id character(128),
     localized_name character(4096),
     approval_time timestamp with time zone NOT NULL,
-    id_object_approved character(32) NOT NULL
+    id integer NOT NULL,
+    id_object_approved integer NOT NULL
 );
 
 
@@ -13679,7 +13747,7 @@ ALTER TABLE public.approval_info OWNER TO postgres;
 CREATE TABLE approval_usage (
     id integer NOT NULL,
     usage_text character(128),
-    approval character(32)
+    approval integer
 );
 
 
@@ -13690,7 +13758,7 @@ ALTER TABLE public.approval_usage OWNER TO postgres;
 --
 
 CREATE VIEW approval AS
-    SELECT approval_info.approval_gml_id, approval_info.authority_gml_id, approval_info.authority_id, approval_info.localized_name, approval_info.approval_time, approval_usage.usage_text, approval_info.id_object_approved FROM approval_info, approval_usage WHERE (approval_usage.approval = approval_info.id) ORDER BY approval_info.approval_gml_id;
+    SELECT approval_info.id, approval_info.authority_gml_id, approval_info.authority_id, approval_info.localized_name, approval_info.approval_time, approval_usage.usage_text, approval_info.id_object_approved FROM (approval_info LEFT JOIN approval_usage ON ((approval_usage.approval = approval_info.id))) ORDER BY approval_info.id;
 
 
 ALTER TABLE public.approval OWNER TO postgres;
@@ -13700,7 +13768,6 @@ ALTER TABLE public.approval OWNER TO postgres;
 --
 
 CREATE TABLE approved_meteorological_object_collection (
-    id character(32) NOT NULL,
     creation_time timestamp with time zone,
     time_period_gml_id character(128),
     time_period_begin_position timestamp with time zone,
@@ -13710,12 +13777,37 @@ CREATE TABLE approved_meteorological_object_collection (
     long_info character(4096),
     type amoc_type,
     forecast_time timestamp with time zone NOT NULL,
-    geographic_region character(32) NOT NULL,
-    signature integer
+    id integer NOT NULL
 );
 
 
 ALTER TABLE public.approved_meteorological_object_collection OWNER TO postgres;
+
+--
+-- Name: base_storm; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE base_storm (
+    id integer NOT NULL,
+    associated integer,
+    creation_time timestamp with time zone NOT NULL,
+    latest_modification_time timestamp with time zone,
+    short_info character(128),
+    long_info character(4096),
+    time_interpolation integer,
+    control_point geometry NOT NULL,
+    priority integer,
+    radius double precision,
+    radius_uom character(32),
+    rain_phase character(32),
+    approx_rain_fall double precision,
+    rain_fall_uom character(32),
+    is_thunderstorm boolean,
+    type storm_type NOT NULL
+);
+
+
+ALTER TABLE public.base_storm OWNER TO postgres;
 
 --
 -- Name: channel_satellite_image; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -13734,31 +13826,152 @@ ALTER TABLE public.channel_satellite_image OWNER TO postgres;
 --
 
 CREATE TABLE cloud_area (
-    id character(64) NOT NULL,
-    polygon geometry
+    id integer NOT NULL,
+    creation_time timestamp with time zone NOT NULL,
+    latest_modification_time timestamp with time zone,
+    short_info character(128),
+    long_info character(4096),
+    control_surface geometry,
+    cloud_type character(8) NOT NULL,
+    cover_percent double precision NOT NULL,
+    associated integer,
+    region_reference character(128),
+    scheme character(8),
+    elevation integer,
+    time_interpolation integer
 );
 
 
 ALTER TABLE public.cloud_area OWNER TO postgres;
 
 --
+-- Name: cold_advection; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW cold_advection AS
+    SELECT abstract_line_object.creation_time, abstract_line_object.latest_modification_time, abstract_line_object.short_info, abstract_line_object.long_info, abstract_line_object.control_curve, abstract_line_object.elevation, abstract_line_object.associated, abstract_line_object.id, abstract_line_object.time_interpolation FROM abstract_line_object WHERE ((abstract_line_object.type)::bpchar = 'ColdAdvection'::bpchar);
+
+
+ALTER TABLE public.cold_advection OWNER TO postgres;
+
+--
 -- Name: cold_front; Type: VIEW; Schema: public; Owner: postgres
 --
 
 CREATE VIEW cold_front AS
-    SELECT abstract_line_object.gml_name_code_space, abstract_line_object.creation_time, abstract_line_object.latest_modification_time, abstract_line_object.short_info, abstract_line_object.long_info, abstract_line_object.time_period_gml_id, abstract_line_object.time_period_begin_position, abstract_line_object.time_period_end_position, abstract_line_object.gml_id, abstract_line_object.associated, abstract_line_object.control_curve, abstract_line_object.start_point_connects_to, abstract_line_object.type, abstract_line_object.end_point_connects_to, abstract_line_object.elevation, abstract_line_object.time_interpolation FROM abstract_line_object WHERE ((abstract_line_object.type)::bpchar = 'ColdFront'::bpchar);
+    SELECT abstract_line_object.creation_time, abstract_line_object.latest_modification_time, abstract_line_object.short_info, abstract_line_object.long_info, abstract_line_object.control_curve, abstract_line_object.elevation, abstract_line_object.associated, abstract_line_object.id, abstract_line_object.time_interpolation FROM abstract_line_object WHERE ((abstract_line_object.type)::bpchar = 'ColdFront'::bpchar);
 
 
 ALTER TABLE public.cold_front OWNER TO postgres;
+
+--
+-- Name: connection_point; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE connection_point (
+    id integer NOT NULL,
+    s_point geometry NOT NULL
+);
+
+
+ALTER TABLE public.connection_point OWNER TO postgres;
+
+--
+-- Name: contains; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE contains (
+    id_exterior integer NOT NULL,
+    id_interior integer NOT NULL
+);
+
+
+ALTER TABLE public.contains OWNER TO postgres;
+
+--
+-- Name: convective_storm; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW convective_storm AS
+    SELECT base_storm.id, base_storm.associated, base_storm.creation_time, base_storm.latest_modification_time, base_storm.short_info, base_storm.long_info, base_storm.time_interpolation, base_storm.control_point, base_storm.priority, base_storm.radius, base_storm.radius_uom, base_storm.rain_phase, base_storm.approx_rain_fall, base_storm.rain_fall_uom, base_storm.is_thunderstorm FROM base_storm WHERE ((base_storm.type)::bpchar = 'ConvectiveStorm'::bpchar);
+
+
+ALTER TABLE public.convective_storm OWNER TO postgres;
+
+--
+-- Name: cyclone; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW cyclone AS
+    SELECT abstract_pressure_center.id, abstract_pressure_center.associated, abstract_pressure_center.creation_time, abstract_pressure_center.latest_modification_time, abstract_pressure_center.short_info, abstract_pressure_center.long_info, abstract_pressure_center.time_interpolation, abstract_pressure_center.control_point, abstract_pressure_center.priority, abstract_pressure_center.radius, abstract_pressure_center.radius_uom, abstract_pressure_center.tendency, abstract_pressure_center.max_wind_speed, abstract_pressure_center.wind_uom FROM abstract_pressure_center WHERE ((abstract_pressure_center.type)::bpchar = 'Cyclone'::bpchar);
+
+
+ALTER TABLE public.cyclone OWNER TO postgres;
+
+--
+-- Name: definition_reference; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE definition_reference (
+    id integer NOT NULL,
+    scheme character(8) NOT NULL,
+    value character(128) NOT NULL
+);
+
+
+ALTER TABLE public.definition_reference OWNER TO postgres;
+
+--
+-- Name: point_meteorological_symbol; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE point_meteorological_symbol (
+    id integer NOT NULL,
+    type point_ms_type NOT NULL,
+    associated integer,
+    creation_time timestamp with time zone NOT NULL,
+    latest_modification_time timestamp with time zone,
+    short_info character(128),
+    long_info character(4096),
+    time_interpolation integer,
+    control_point geometry NOT NULL,
+    priority integer,
+    radius double precision,
+    radius_uom character(32),
+    localized_symbol_name character(128)
+);
+
+
+ALTER TABLE public.point_meteorological_symbol OWNER TO postgres;
+
+--
+-- Name: point_ms_has_definition_reference; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE point_ms_has_definition_reference (
+    id_point_ms integer NOT NULL,
+    id_definition_reference integer NOT NULL
+);
+
+
+ALTER TABLE public.point_ms_has_definition_reference OWNER TO postgres;
+
+--
+-- Name: directional_meteorological_symbol_view; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW directional_meteorological_symbol_view AS
+    SELECT point_meteorological_symbol.id, point_meteorological_symbol.type, point_meteorological_symbol.associated, point_meteorological_symbol.creation_time, point_meteorological_symbol.latest_modification_time, point_meteorological_symbol.short_info, point_meteorological_symbol.long_info, point_meteorological_symbol.time_interpolation, point_meteorological_symbol.control_point, point_meteorological_symbol.priority, point_meteorological_symbol.radius, point_meteorological_symbol.radius_uom, point_meteorological_symbol.localized_symbol_name, definition_reference.value, definition_reference.scheme FROM definition_reference, (point_meteorological_symbol LEFT JOIN point_ms_has_definition_reference ON ((point_meteorological_symbol.id = point_ms_has_definition_reference.id_point_ms))) WHERE ((definition_reference.id = point_ms_has_definition_reference.id_definition_reference) AND ((point_meteorological_symbol.type)::bpchar = 'DirectionalMeteorologicalSymbol'::bpchar)) ORDER BY point_meteorological_symbol.id;
+
+
+ALTER TABLE public.directional_meteorological_symbol_view OWNER TO postgres;
 
 --
 -- Name: elevation; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE elevation (
-    gml_id character(128) NOT NULL,
     uom character(32) NOT NULL,
-    elevation_value double precision,
     lower_elevation_value double precision,
     upper_elevation_value double precision,
     id integer NOT NULL
@@ -13810,20 +14023,128 @@ CREATE TABLE geometry_columns (
 
 ALTER TABLE public.geometry_columns OWNER TO postgres;
 
+--
+-- Name: high_pressure_center; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW high_pressure_center AS
+    SELECT abstract_pressure_center.id, abstract_pressure_center.associated, abstract_pressure_center.creation_time, abstract_pressure_center.latest_modification_time, abstract_pressure_center.short_info, abstract_pressure_center.long_info, abstract_pressure_center.time_interpolation, abstract_pressure_center.control_point, abstract_pressure_center.priority, abstract_pressure_center.radius, abstract_pressure_center.radius_uom, abstract_pressure_center.tendency, abstract_pressure_center.max_wind_speed, abstract_pressure_center.wind_uom FROM abstract_pressure_center WHERE ((abstract_pressure_center.type)::bpchar = 'HighPressureCenter'::bpchar);
+
+
+ALTER TABLE public.high_pressure_center OWNER TO postgres;
+
 SET default_with_oids = false;
+
+--
+-- Name: is_located_by; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE is_located_by (
+    id_obj integer NOT NULL,
+    id_geographic_region integer NOT NULL
+);
+
+
+ALTER TABLE public.is_located_by OWNER TO postgres;
+
+--
+-- Name: low_pressure_center; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW low_pressure_center AS
+    SELECT abstract_pressure_center.id, abstract_pressure_center.associated, abstract_pressure_center.creation_time, abstract_pressure_center.latest_modification_time, abstract_pressure_center.short_info, abstract_pressure_center.long_info, abstract_pressure_center.time_interpolation, abstract_pressure_center.control_point, abstract_pressure_center.priority, abstract_pressure_center.radius, abstract_pressure_center.radius_uom, abstract_pressure_center.tendency, abstract_pressure_center.max_wind_speed, abstract_pressure_center.wind_uom FROM abstract_pressure_center WHERE ((abstract_pressure_center.type)::bpchar = 'LowPressureCenter'::bpchar);
+
+
+ALTER TABLE public.low_pressure_center OWNER TO postgres;
+
+--
+-- Name: mesocyclone; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW mesocyclone AS
+    SELECT abstract_pressure_center.id, abstract_pressure_center.associated, abstract_pressure_center.creation_time, abstract_pressure_center.latest_modification_time, abstract_pressure_center.short_info, abstract_pressure_center.long_info, abstract_pressure_center.time_interpolation, abstract_pressure_center.control_point, abstract_pressure_center.priority, abstract_pressure_center.radius, abstract_pressure_center.radius_uom, abstract_pressure_center.tendency, abstract_pressure_center.max_wind_speed, abstract_pressure_center.wind_uom FROM abstract_pressure_center WHERE ((abstract_pressure_center.type)::bpchar = 'Mesocyclone'::bpchar);
+
+
+ALTER TABLE public.mesocyclone OWNER TO postgres;
+
+--
+-- Name: mesolow; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW mesolow AS
+    SELECT abstract_pressure_center.id, abstract_pressure_center.associated, abstract_pressure_center.creation_time, abstract_pressure_center.latest_modification_time, abstract_pressure_center.short_info, abstract_pressure_center.long_info, abstract_pressure_center.time_interpolation, abstract_pressure_center.control_point, abstract_pressure_center.priority, abstract_pressure_center.radius, abstract_pressure_center.radius_uom, abstract_pressure_center.tendency, abstract_pressure_center.max_wind_speed, abstract_pressure_center.wind_uom FROM abstract_pressure_center WHERE ((abstract_pressure_center.type)::bpchar = 'Mesolow'::bpchar);
+
+
+ALTER TABLE public.mesolow OWNER TO postgres;
+
+--
+-- Name: met_obj_has_conn_p; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE met_obj_has_conn_p (
+    id_obj integer NOT NULL,
+    id_point integer NOT NULL
+);
+
+
+ALTER TABLE public.met_obj_has_conn_p OWNER TO postgres;
 
 --
 -- Name: meteorological_analysis; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE meteorological_analysis (
-    gml_id integer NOT NULL,
-    geographic_region character(32) NOT NULL,
-    analysis_time timestamp with time zone
+    id integer NOT NULL,
+    analysis_time timestamp with time zone,
+    id_obj integer NOT NULL
 );
 
 
 ALTER TABLE public.meteorological_analysis OWNER TO postgres;
+
+--
+-- Name: meteorological_analysis_located_by; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE meteorological_analysis_located_by (
+    id_meteorological_analysis integer NOT NULL,
+    id_geographic_region integer NOT NULL
+);
+
+
+ALTER TABLE public.meteorological_analysis_located_by OWNER TO postgres;
+
+--
+-- Name: meteorological_analysis_reference; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW meteorological_analysis_reference AS
+    SELECT meteorological_analysis_located_by.id_geographic_region, meteorological_analysis.id, meteorological_analysis.analysis_time, meteorological_analysis.id_obj FROM meteorological_analysis_located_by, meteorological_analysis WHERE (meteorological_analysis_located_by.id_meteorological_analysis = meteorological_analysis.id) ORDER BY meteorological_analysis.id;
+
+
+ALTER TABLE public.meteorological_analysis_reference OWNER TO postgres;
+
+--
+-- Name: meteorological_analysis_view; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW meteorological_analysis_view AS
+    SELECT approved_meteorological_object_collection.id, approved_meteorological_object_collection.creation_time, approved_meteorological_object_collection.time_period_gml_id, approved_meteorological_object_collection.time_period_begin_position, approved_meteorological_object_collection.time_period_end_position, approved_meteorological_object_collection.latest_modification_time, approved_meteorological_object_collection.short_info, approved_meteorological_object_collection.long_info, approved_meteorological_object_collection.forecast_time, is_located_by.id_geographic_region FROM is_located_by, approved_meteorological_object_collection WHERE ((approved_meteorological_object_collection.id = is_located_by.id_obj) AND ((approved_meteorological_object_collection.type)::bpchar = 'MeteorologicalAnalysis'::bpchar)) ORDER BY approved_meteorological_object_collection.id;
+
+
+ALTER TABLE public.meteorological_analysis_view OWNER TO postgres;
+
+--
+-- Name: numerical_model_located_by; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE numerical_model_located_by (
+    id_numerical_model integer NOT NULL,
+    id_geographic_region integer NOT NULL
+);
+
+
+ALTER TABLE public.numerical_model_located_by OWNER TO postgres;
 
 --
 -- Name: numerical_model_run_forecast; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -13831,7 +14152,6 @@ ALTER TABLE public.meteorological_analysis OWNER TO postgres;
 
 CREATE TABLE numerical_model_run_forecast (
     id integer NOT NULL,
-    geographic_region character(32) NOT NULL,
     analysis_time timestamp with time zone NOT NULL,
     result_time timestamp with time zone,
     gml_validity_time character(32),
@@ -13839,11 +14159,84 @@ CREATE TABLE numerical_model_run_forecast (
     model_specifier character(128),
     model_gml_id character(32),
     validity_time_begin timestamp with time zone,
-    validity_time_end timestamp with time zone
+    validity_time_end timestamp with time zone,
+    id_obj integer NOT NULL
 );
 
 
 ALTER TABLE public.numerical_model_run_forecast OWNER TO postgres;
+
+--
+-- Name: numerical_model_run_forecast_reference; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW numerical_model_run_forecast_reference AS
+    SELECT numerical_model_run_forecast.id, numerical_model_run_forecast.analysis_time, numerical_model_run_forecast.result_time, numerical_model_run_forecast.gml_validity_time, numerical_model_run_forecast.model_identifier, numerical_model_run_forecast.model_specifier, numerical_model_run_forecast.model_gml_id, numerical_model_run_forecast.validity_time_begin, numerical_model_run_forecast.validity_time_end, numerical_model_run_forecast.id_obj, numerical_model_located_by.id_geographic_region FROM numerical_model_located_by, numerical_model_run_forecast WHERE (numerical_model_located_by.id_numerical_model = numerical_model_run_forecast.id) ORDER BY numerical_model_run_forecast.id;
+
+
+ALTER TABLE public.numerical_model_run_forecast_reference OWNER TO postgres;
+
+--
+-- Name: occluded_front; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE occluded_front (
+    creation_time timestamp with time zone NOT NULL,
+    latest_modification_time timestamp with time zone,
+    short_info character(128),
+    long_info character(4096),
+    control_curve geometry,
+    associated integer,
+    id integer NOT NULL,
+    time_interpolation integer,
+    elevation integer,
+    stationary boolean
+);
+
+
+ALTER TABLE public.occluded_front OWNER TO postgres;
+
+--
+-- Name: point_meteorological_symbol_view; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW point_meteorological_symbol_view AS
+    SELECT point_meteorological_symbol.id, point_meteorological_symbol.type, point_meteorological_symbol.associated, point_meteorological_symbol.creation_time, point_meteorological_symbol.latest_modification_time, point_meteorological_symbol.short_info, point_meteorological_symbol.long_info, point_meteorological_symbol.time_interpolation, point_meteorological_symbol.control_point, point_meteorological_symbol.priority, point_meteorological_symbol.radius, point_meteorological_symbol.radius_uom, point_meteorological_symbol.localized_symbol_name, definition_reference.value, definition_reference.scheme FROM definition_reference, (point_meteorological_symbol LEFT JOIN point_ms_has_definition_reference ON ((point_meteorological_symbol.id = point_ms_has_definition_reference.id_point_ms))) WHERE ((definition_reference.id = point_ms_has_definition_reference.id_definition_reference) AND ((point_meteorological_symbol.type)::bpchar = 'PointMeteorologicalSymbol'::bpchar)) ORDER BY point_meteorological_symbol.id;
+
+
+ALTER TABLE public.point_meteorological_symbol_view OWNER TO postgres;
+
+--
+-- Name: polar_cyclone; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW polar_cyclone AS
+    SELECT abstract_pressure_center.id, abstract_pressure_center.associated, abstract_pressure_center.creation_time, abstract_pressure_center.latest_modification_time, abstract_pressure_center.short_info, abstract_pressure_center.long_info, abstract_pressure_center.time_interpolation, abstract_pressure_center.control_point, abstract_pressure_center.priority, abstract_pressure_center.radius, abstract_pressure_center.radius_uom, abstract_pressure_center.tendency, abstract_pressure_center.max_wind_speed, abstract_pressure_center.wind_uom FROM abstract_pressure_center WHERE ((abstract_pressure_center.type)::bpchar = 'PolarCyclone'::bpchar);
+
+
+ALTER TABLE public.polar_cyclone OWNER TO postgres;
+
+--
+-- Name: polar_low; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW polar_low AS
+    SELECT abstract_pressure_center.id, abstract_pressure_center.associated, abstract_pressure_center.creation_time, abstract_pressure_center.latest_modification_time, abstract_pressure_center.short_info, abstract_pressure_center.long_info, abstract_pressure_center.time_interpolation, abstract_pressure_center.control_point, abstract_pressure_center.priority, abstract_pressure_center.radius, abstract_pressure_center.radius_uom, abstract_pressure_center.tendency, abstract_pressure_center.max_wind_speed, abstract_pressure_center.wind_uom FROM abstract_pressure_center WHERE ((abstract_pressure_center.type)::bpchar = 'PolarLow'::bpchar);
+
+
+ALTER TABLE public.polar_low OWNER TO postgres;
+
+--
+-- Name: prova; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE prova (
+    k integer NOT NULL,
+    shape geometry
+);
+
+
+ALTER TABLE public.prova OWNER TO postgres;
 
 --
 -- Name: radar_image; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -13853,11 +14246,22 @@ CREATE TABLE radar_image (
     id integer NOT NULL,
     instrument character(128) NOT NULL,
     point_gml_id character(128) NOT NULL,
-    centre geometry NOT NULL
+    centre geometry NOT NULL,
+    id_obj integer NOT NULL
 );
 
 
 ALTER TABLE public.radar_image OWNER TO postgres;
+
+--
+-- Name: ridge; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW ridge AS
+    SELECT abstract_line_object.creation_time, abstract_line_object.latest_modification_time, abstract_line_object.short_info, abstract_line_object.long_info, abstract_line_object.control_curve, abstract_line_object.elevation, abstract_line_object.associated, abstract_line_object.id, abstract_line_object.time_interpolation FROM abstract_line_object WHERE ((abstract_line_object.type)::bpchar = 'Ridge'::bpchar);
+
+
+ALTER TABLE public.ridge OWNER TO postgres;
 
 --
 -- Name: satellite_image_; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -13866,7 +14270,8 @@ ALTER TABLE public.radar_image OWNER TO postgres;
 CREATE TABLE satellite_image_ (
     id integer NOT NULL,
     instrument character(128) NOT NULL,
-    reference_time timestamp with time zone NOT NULL
+    reference_time timestamp with time zone NOT NULL,
+    id_obj integer NOT NULL
 );
 
 
@@ -13877,7 +14282,7 @@ ALTER TABLE public.satellite_image_ OWNER TO postgres;
 --
 
 CREATE VIEW satellite_image_reference AS
-    SELECT satellite_image_.id, satellite_image_.instrument, satellite_image_.reference_time, channel_satellite_image.channel FROM satellite_image_, channel_satellite_image WHERE (channel_satellite_image.satellite_image_id = satellite_image_.id) ORDER BY satellite_image_.id;
+    SELECT satellite_image_.id, satellite_image_.instrument, satellite_image_.reference_time, channel_satellite_image.channel, satellite_image_.id_obj FROM satellite_image_, channel_satellite_image WHERE (channel_satellite_image.satellite_image_id = satellite_image_.id) ORDER BY satellite_image_.id;
 
 
 ALTER TABLE public.satellite_image_reference OWNER TO postgres;
@@ -13898,11 +14303,46 @@ CREATE TABLE spatial_ref_sys (
 ALTER TABLE public.spatial_ref_sys OWNER TO postgres;
 
 --
+-- Name: storm; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW storm AS
+    SELECT base_storm.id, base_storm.associated, base_storm.creation_time, base_storm.latest_modification_time, base_storm.short_info, base_storm.long_info, base_storm.time_interpolation, base_storm.control_point, base_storm.priority, base_storm.radius, base_storm.radius_uom, base_storm.rain_phase, base_storm.approx_rain_fall, base_storm.rain_fall_uom, base_storm.is_thunderstorm FROM base_storm WHERE ((base_storm.type)::bpchar = 'Storm'::bpchar);
+
+
+ALTER TABLE public.storm OWNER TO postgres;
+
+--
+-- Name: surface_precipitation_area; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE surface_precipitation_area (
+    id integer NOT NULL,
+    creation_time timestamp with time zone NOT NULL,
+    latest_modification_time timestamp with time zone,
+    short_info character(128),
+    long_info character(4096),
+    control_surface geometry,
+    associated integer,
+    region_reference character(128),
+    scheme character(8),
+    elevation integer,
+    time_interpolation integer,
+    rain_phase character(32),
+    continuity double precision,
+    showeriness double precision,
+    approx_rain_fall double precision,
+    rain_fall_uom character(32)
+);
+
+
+ALTER TABLE public.surface_precipitation_area OWNER TO postgres;
+
+--
 -- Name: time_interpolation; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE time_interpolation (
-    gml_id character(128) NOT NULL,
     id integer NOT NULL,
     unit character(64) NOT NULL,
     radix integer,
@@ -13915,35 +14355,51 @@ CREATE TABLE time_interpolation (
 ALTER TABLE public.time_interpolation OWNER TO postgres;
 
 --
--- Name: uncertainty_area; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: tropical_cyclone; Type: VIEW; Schema: public; Owner: postgres
 --
 
-CREATE TABLE uncertainty_area (
-    gml_id character(128) NOT NULL,
-    geometry geometry
-);
+CREATE VIEW tropical_cyclone AS
+    SELECT abstract_pressure_center.id, abstract_pressure_center.associated, abstract_pressure_center.creation_time, abstract_pressure_center.latest_modification_time, abstract_pressure_center.short_info, abstract_pressure_center.long_info, abstract_pressure_center.time_interpolation, abstract_pressure_center.control_point, abstract_pressure_center.priority, abstract_pressure_center.radius, abstract_pressure_center.radius_uom, abstract_pressure_center.tendency, abstract_pressure_center.max_wind_speed, abstract_pressure_center.wind_uom FROM abstract_pressure_center WHERE ((abstract_pressure_center.type)::bpchar = 'TropicalCyclone'::bpchar);
 
 
-ALTER TABLE public.uncertainty_area OWNER TO postgres;
+ALTER TABLE public.tropical_cyclone OWNER TO postgres;
 
 --
--- Name: uses; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: trough; Type: VIEW; Schema: public; Owner: postgres
 --
 
-CREATE TABLE uses (
-    id_approved_meteorological_object_collection character(32) NOT NULL,
-    id_used_reference_data character(64) NOT NULL
-);
+CREATE VIEW trough AS
+    SELECT abstract_line_object.creation_time, abstract_line_object.latest_modification_time, abstract_line_object.short_info, abstract_line_object.long_info, abstract_line_object.control_curve, abstract_line_object.elevation, abstract_line_object.associated, abstract_line_object.id, abstract_line_object.time_interpolation FROM abstract_line_object WHERE ((abstract_line_object.type)::bpchar = 'Trough'::bpchar);
 
 
-ALTER TABLE public.uses OWNER TO postgres;
+ALTER TABLE public.trough OWNER TO postgres;
+
+--
+-- Name: upper_trough; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW upper_trough AS
+    SELECT abstract_line_object.creation_time, abstract_line_object.latest_modification_time, abstract_line_object.short_info, abstract_line_object.long_info, abstract_line_object.control_curve, abstract_line_object.elevation, abstract_line_object.associated, abstract_line_object.id, abstract_line_object.time_interpolation FROM abstract_line_object WHERE ((abstract_line_object.type)::bpchar = 'UpperTrough'::bpchar);
+
+
+ALTER TABLE public.upper_trough OWNER TO postgres;
+
+--
+-- Name: warm_advection; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW warm_advection AS
+    SELECT abstract_line_object.creation_time, abstract_line_object.latest_modification_time, abstract_line_object.short_info, abstract_line_object.long_info, abstract_line_object.control_curve, abstract_line_object.elevation, abstract_line_object.associated, abstract_line_object.id, abstract_line_object.time_interpolation FROM abstract_line_object WHERE ((abstract_line_object.type)::bpchar = 'WarmAdvection'::bpchar);
+
+
+ALTER TABLE public.warm_advection OWNER TO postgres;
 
 --
 -- Name: warm_front; Type: VIEW; Schema: public; Owner: postgres
 --
 
 CREATE VIEW warm_front AS
-    SELECT abstract_line_object.gml_name_code_space, abstract_line_object.creation_time, abstract_line_object.latest_modification_time, abstract_line_object.short_info, abstract_line_object.long_info, abstract_line_object.time_period_gml_id, abstract_line_object.time_period_begin_position, abstract_line_object.time_period_end_position, abstract_line_object.gml_id, abstract_line_object.associated, abstract_line_object.control_curve, abstract_line_object.start_point_connects_to, abstract_line_object.type, abstract_line_object.end_point_connects_to, abstract_line_object.elevation, abstract_line_object.time_interpolation FROM abstract_line_object WHERE ((abstract_line_object.type)::bpchar = 'WarmFront'::bpchar);
+    SELECT abstract_line_object.creation_time, abstract_line_object.latest_modification_time, abstract_line_object.short_info, abstract_line_object.long_info, abstract_line_object.control_curve, abstract_line_object.elevation, abstract_line_object.associated, abstract_line_object.id, abstract_line_object.time_interpolation FROM abstract_line_object WHERE ((abstract_line_object.type)::bpchar = 'WarmFront'::bpchar);
 
 
 ALTER TABLE public.warm_front OWNER TO postgres;
@@ -13953,24 +14409,46 @@ ALTER TABLE public.warm_front OWNER TO postgres;
 --
 
 CREATE VIEW weather_forecast AS
-    SELECT approved_meteorological_object_collection.id, approved_meteorological_object_collection.creation_time, approved_meteorological_object_collection.time_period_gml_id, approved_meteorological_object_collection.time_period_begin_position, approved_meteorological_object_collection.time_period_end_position, approved_meteorological_object_collection.latest_modification_time, approved_meteorological_object_collection.short_info, approved_meteorological_object_collection.long_info, approved_meteorological_object_collection.signature, approved_meteorological_object_collection.geographic_region, approved_meteorological_object_collection.forecast_time, uses.id_used_reference_data FROM approved_meteorological_object_collection, uses WHERE ((uses.id_approved_meteorological_object_collection = approved_meteorological_object_collection.id) AND ((approved_meteorological_object_collection.type)::bpchar = 'WeatherForecast'::bpchar)) ORDER BY approved_meteorological_object_collection.id;
+    SELECT approved_meteorological_object_collection.id, approved_meteorological_object_collection.creation_time, approved_meteorological_object_collection.time_period_gml_id, approved_meteorological_object_collection.time_period_begin_position, approved_meteorological_object_collection.time_period_end_position, approved_meteorological_object_collection.latest_modification_time, approved_meteorological_object_collection.short_info, approved_meteorological_object_collection.long_info, approved_meteorological_object_collection.forecast_time, is_located_by.id_geographic_region FROM is_located_by, approved_meteorological_object_collection WHERE ((approved_meteorological_object_collection.id = is_located_by.id_obj) AND ((approved_meteorological_object_collection.type)::bpchar = 'WeatherForecast'::bpchar)) ORDER BY approved_meteorological_object_collection.id;
 
 
 ALTER TABLE public.weather_forecast OWNER TO postgres;
 
 --
--- Name: weather_forecast_reference; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: weather_forecast_r; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
-CREATE TABLE weather_forecast_reference (
+CREATE TABLE weather_forecast_r (
     id integer NOT NULL,
-    geographic_region character(32) NOT NULL,
     analysis_time timestamp with time zone NOT NULL,
     result_time timestamp with time zone,
     gml_validity_time character(32),
     validity_time_begin timestamp with time zone,
-    validity_time_end timestamp with time zone
+    validity_time_end timestamp with time zone,
+    id_obj integer
 );
+
+
+ALTER TABLE public.weather_forecast_r OWNER TO postgres;
+
+--
+-- Name: weather_forecast_r_located_by; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE weather_forecast_r_located_by (
+    id_weather_forecast_r integer NOT NULL,
+    id_geographic_region integer NOT NULL
+);
+
+
+ALTER TABLE public.weather_forecast_r_located_by OWNER TO postgres;
+
+--
+-- Name: weather_forecast_reference; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW weather_forecast_reference AS
+    SELECT weather_forecast_r.id, weather_forecast_r.analysis_time, weather_forecast_r.result_time, weather_forecast_r.gml_validity_time, weather_forecast_r.validity_time_begin, weather_forecast_r.validity_time_end, weather_forecast_r.id_obj, weather_forecast_r_located_by.id_weather_forecast_r, weather_forecast_r_located_by.id_geographic_region FROM weather_forecast_r, weather_forecast_r_located_by WHERE (weather_forecast_r_located_by.id_weather_forecast_r = weather_forecast_r.id) ORDER BY weather_forecast_r.id;
 
 
 ALTER TABLE public.weather_forecast_reference OWNER TO postgres;
@@ -13979,9 +14457,27 @@ ALTER TABLE public.weather_forecast_reference OWNER TO postgres;
 -- Data for Name: abstract_line_object; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY abstract_line_object (gml_name_code_space, creation_time, latest_modification_time, short_info, long_info, time_period_gml_id, time_period_begin_position, time_period_end_position, gml_id, associated, control_curve, start_point_connects_to, type, end_point_connects_to, elevation, time_interpolation) FROM stdin;
-test_codeSpace                                                                                                                  	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	A warm front                                                                                                                    	A description about this warm front                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             	time-id359506                                                                                                                   	2009-02-02 13:00:00+01	2009-02-03 13:00:00+01	warmFront1                                                                                                                      	wf1                                                             	01020000000400000037894160E5984F40F241CF66D5A71EC08BFD65F7E4994F40B4C876BE9F9A1DC0FE43FAEDEBA04F405F07CE19511A1DC0C139234A7BA34F40F9A067B3EAB31CC0	\N	WarmFront       	\N	\N	\N
-LINESTRING(63.1945 -7.6639,63.2023 -7.401,63.2572 -7.2757,63.2772 -7.1757)                                                      	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	A cold front                                                                                                                    	A description about this cold front                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             	time-id359506                                                                                                                   	2009-02-02 13:00:00+01	2009-02-03 13:00:00+01	cf.1                                                                                                                            	wf1                                                             	01020000205E0900000400000037894160E5984F40F241CF66D5A71EC08BFD65F7E4994F40B4C876BE9F9A1DC0FE43FAEDEBA04F405F07CE19511A1DC0C139234A7BA34F40F9A067B3EAB31CC0	\N	ColdFront       	\N	el.1                                                                                                                            	ti.1                                                                                                                            
+COPY abstract_line_object (creation_time, latest_modification_time, short_info, long_info, control_curve, associated, id, time_interpolation, elevation, type) FROM stdin;
+2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	A warm front                                                                                                                    	A description about this warm front                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             	01020000205E0900000400000037894160E5984F40F241CF66D5A71EC08BFD65F7E4994F40B4C876BE9F9A1DC0FE43FAEDEBA04F405F07CE19511A1DC0C139234A7BA34F40F9A067B3EAB31CC0	1	2	2	1	WarmAdvection   
+2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	A cold front                                                                                                                    	A description about this cold front                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             	010200000081000000C139234A7BA34F40F9A067B3EAB31CC02F92613B419F4F40B933D4CD8F201DC023381DE35D9A4F402EC118A76A8B1DC0BCF11245D4944F40780AC05839F41DC0F8F48ACBA78E4F405465973FBB5A1EC056B63D45DC874F4034D48B23B1BE1EC00AC6FAE275804F40AD2BA75EDD1F1FC0862E133579784F408E391503047E1FC059EC8828EB6F4F40F87A1900EBD81FC0D13B0504D1664F40104BEF222D1820C0F49B9764305D4F40FCC004F40D4220C08B883F3A0F534F407E847D1FFE6920C0E60D43C473484F404592D503E58F20C05D78548D643D4F40AC450541ABB320C0F87F8967E8314F401ADBEBC63AD520C01D6D266806264F408BC9EAE27EF420C078CE3FE3C5194F40FE8EA94C641121C0B47135672E0D4F406A10FA31D92B21C0B96809B847004F40B337D641CD4321C002FB95CA19F34E40620870B6315921C05877A5BFACE54E4060F64D5EF96B21C08CECEEDE08D84E4058E06DA4187C21C0B6E0FA9136CA4E4006A96997858921C01B2DF35E3EBC4E40D00799EF379421C0F43161E328AE4E406CC82C14299C21C0F49FDDCEFE9F4E407153401F54A121C0861EB5DDC8914E4066FDDEE0B5A321C06F1C85D38F834E40773FFBE04CA321C07E1DD4755C754E4068A3566019A021C08DDAA88637674E40CCD359581D9A21C0038A23BF29594E400FE9DC795C9121C08AA51CCA3B4B4E409EB3E02ADC8521C0567ECC3E763D4E408A6A3A83A37721C0FEEB7E9BE12F4E4040CC3348BB6621C04F5A564086224E40126422E72D5321C02671216A6C154E40764AF96E073D21C0CB85462D9C084E406657D988552421C0EFF7C7701DFC4D40DD5CA46F270921C0008D64E9F7EF4D40AE9B98E68DEB20C044CBD61433E44D409C3DFA2E9BCB20C017433635D6D84D40EA34D1FC62A920C0B29F7D4CE8CD4D40CC72C26AFA8420C03642381870C34D4056F30BED775E20C056115A0D74B94D40B4A5AB43F33520C0E40D4454FAAF4D401EBBB96B850B20C00B21F8C408A74D40F5C9FE1F91BE1FC0AF7B7EE3A49E4D40CC06A7F1AF621FC013C07EDCD3964D40FA6F8EF69F031FC0B60E0F829A8F4D40CC7A59CF9BA11EC05BEEBA48FD884D40B39406EFDF3C1EC089E4C34400834D40D94CA675AAD51DC05E709D27A77D4D4022DF0A0A3B6C1DC0DEF4A53DF5784D40D0C186B2D2001DC060FA1D6CED744D40766BD2ACB3931CC034085F2F92714D40C20C324521251CC082305399E56E4D40EC6FF4AC5FB51BC05B402E50E96C4D40B39664D0B3441BC0995D698D9E6B4D40B606482C63D31AC01CB3011D066B4D4044FB03A3B3611AC098A2FA5C206B4D4090EA8351EBEF19C09CC9233DED6B4D4005F3FB63507E19C082FD223F6C6D4D407EDBA1EA280D19C03238C2769C6F4D40305777AEBA9C18C08E45818A7C724D406A3340064B2D18C0D2D76AB40A764D40D0F9BEAB1EBF17C0657F2CC3447A4D4014675291795217C070D9701B287F4D40A5D90DB89EE716C0D61F7BB9B1844D405F906606D07E16C09A1C0333DE8A4D4088358F1F4E1816C03B5B50B9A9914D40ACC69A3B58B415C0894B931B10994D40186F7F002C5315C010E37AC90CA14D401E61115C05F514C03F2505D69AA94D409D1F0D5F1E9A14C0C9D588FAB4B24D4060044819AF4214C0AA75F69955BC4D4072181D77EDEE13C015894EC476C64D405E912B200D9F13C0BE034B3A12D14D40C1757B573F5313C04B99397121DC4D40E70E1CDDB20B13C0B49104979DE74D4002E44ED193C812C092A467967FF34D401A0751990B8A12C03C434E1BC0FF4D40307CD3C5405012C004A05897570C4E40577932FB561B12C003A984463E194E40C62A7ADB6EEB11C0BF16F8336C264E40708946F2A5C011C06E9AE83ED9334E407BAD8AA2169B11C03D259F1F7D414E4098D94A16D87A11C01831936C4F4F4E404A485330FE5F11C0B7E49A9F475D4E40C88AF47F994A11C0E3DF2C1B5D6B4E40A409CD36B73A11C0E771B02F87794E40B2F3A520613011C059F3D820BD874E40E39F689D9D2B11C073F5082BF6954E40E01B309D6F2C11C068F4B98829A44E401F54799ED63211C05D37E5774EB24E407BF372AECE3E11C0E9876A3F5CC04E401CC96C6B505011C0656C71344ACE4E4027346509516711C09C93C1BF0FDC4E407CC6B158C28311C0F6250F63A4E94E403D03BFCE92A511C09EB737BEFFF64E40B1D3E190ADCC11C0B8A06C9419044F40DC063481FAF811C0058C47D1E9104F40E4EC734D5E2A12C0D319C68D681D4F40D4E1DD7FBA6012C0B58429158E294F400864F591ED9B12C06546B7E952354F40F51F3201D3DB12C086CE57C9AF404F401C318465432013C0E07110B29D4B4F4010B5A189146913C051CF55E615564F40ACB30E8519B613C0280034F111604F40974ECFD7220714C092034AAA8B694F406423B387FE5B14C065F095397D724F4046CF273F78B414C0BA950F1BE17A4F4003927F6D591015C052510F22B2824F4064289868696F15C0AB027F7CEB894F401E1DCD8F6DD115C00523D3B588904F40BD022070293616C0D62CCAB985964F401C4A80E95E9D16C003A1F0D6DE9B4F4054B71B55CE0617C0851CE8C090A04F4027D49FAC367217C00717709298A44F40012A54B255DF17C038092FCFF3A74F403688F419E84D18C0F1E03A65A0AA4F408E2432B2A9BD18C020D15FAE9CAC4F404BFDC18E552E19C0EBB32471E7AD4F40CE8CDE32A69F19C0745E8CE17FAE4F40CB9722BC55111AC0046F93A165AE4F400EA8A20D1E831AC00F486AC198AD4F402D9F2AFBB8F41AC037146BBF19AC4F4050B68474E0651BC098D9CB87E9A94F403B3AAFB04ED61BC04ECC0C7409A74F40AF5DE658BE451CC0D712F241CFA64F40933A014D844D1CC0	2	1	2	1	Ridge           
+\.
+
+
+--
+-- Data for Name: abstract_pressure_center; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY abstract_pressure_center (id, type, associated, creation_time, latest_modification_time, short_info, long_info, time_interpolation, control_point, priority, radius, radius_uom, tendency, max_wind_speed, wind_uom) FROM stdin;
+1	Mesolow                         	1	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	mesolow                                                                                                                         	Una zona di bassa pressione                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     	2	01010000205E0900004703780B246C51400612143FC6BC2640	3	2.5	chilometri                      	strengthening                   	7.5	nodi                            
+2	Anticyclone                     	1	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	mesolow                                                                                                                         	Una zona di bassa pressione                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     	2	01010000205E0900004703780B246C51400612143FC6BC2640	3	2.5	chilometri                      	strengthening                   	7.5	nodi                            
+3	Antimesocyclone                 	1	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	mesolow                                                                                                                         	Una zona di bassa pressione                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     	2	01010000205E0900004703780B246C51400612143FC6BC2640	3	2.5	chilometri                      	strengthening                   	7.5	nodi                            
+4	Cyclone                         	1	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	mesolow                                                                                                                         	Una zona di bassa pressione                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     	2	01010000205E0900004703780B246C51400612143FC6BC2640	3	2.5	chilometri                      	strengthening                   	7.5	nodi                            
+5	HighPressureCenter              	1	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	mesolow                                                                                                                         	Una zona di bassa pressione                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     	2	01010000205E0900004703780B246C51400612143FC6BC2640	3	2.5	chilometri                      	strengthening                   	7.5	nodi                            
+6	LowPressureCenter               	1	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	mesolow                                                                                                                         	Una zona di bassa pressione                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     	2	01010000205E0900004703780B246C51400612143FC6BC2640	3	2.5	chilometri                      	strengthening                   	7.5	nodi                            
+7	Mesocyclone                     	1	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	mesolow                                                                                                                         	Una zona di bassa pressione                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     	2	01010000205E0900004703780B246C51400612143FC6BC2640	3	2.5	chilometri                      	strengthening                   	7.5	nodi                            
+8	PolarCyclone                    	1	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	mesolow                                                                                                                         	Una zona di bassa pressione                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     	2	01010000205E0900004703780B246C51400612143FC6BC2640	3	2.5	chilometri                      	strengthening                   	7.5	nodi                            
+9	PolarLow                        	1	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	mesolow                                                                                                                         	Una zona di bassa pressione                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     	2	01010000205E0900004703780B246C51400612143FC6BC2640	3	2.5	chilometri                      	strengthening                   	7.5	nodi                            
+19	TropicalCyclone                 	1	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	mesolow                                                                                                                         	Una zona di bassa pressione                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     	2	01010000205E0900004703780B246C51400612143FC6BC2640	3	2.5	chilometri                      	strengthening                   	7.5	nodi                            
 \.
 
 
@@ -13989,8 +14485,9 @@ LINESTRING(63.1945 -7.6639,63.2023 -7.401,63.2572 -7.2757,63.2772 -7.1757)      
 -- Data for Name: approval_info; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY approval_info (id, approval_gml_id, authority_gml_id, authority_id, localized_name, approval_time, id_object_approved) FROM stdin;
-approval1                       	appr-1                                                                                                                          	auth-1                                                                                                                          	urn:auth:userid:fi:fmi:ldap:role:chiefofdesk                                                                                    	Finnish Meteorological Institute, Chief of Desk                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 	2009-02-01 13:44:30+01	weather_forecast.1              
+COPY approval_info (authority_gml_id, authority_id, localized_name, approval_time, id, id_object_approved) FROM stdin;
+auth-1                                                                                                                          	urn:auth:userid:fi:fmi:ldap:role:chiefofdesk                                                                                    	Finnish Meteorological Institute, Chief of Desk                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 	2009-02-01 13:44:30+01	1	1
+auth.2                                                                                                                          	id2                                                                                                                             	lzd2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            	2009-02-02 13:00:00+01	11	1
 \.
 
 
@@ -13999,8 +14496,8 @@ approval1                       	appr-1                                         
 --
 
 COPY approval_usage (id, usage_text, approval) FROM stdin;
-1	other                                                                                                                           	approval1                       
-2	general_public_usage                                                                                                            	approval1                       
+1	other                                                                                                                           	1
+2	general_public_usage                                                                                                            	1
 \.
 
 
@@ -14008,8 +14505,21 @@ COPY approval_usage (id, usage_text, approval) FROM stdin;
 -- Data for Name: approved_meteorological_object_collection; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY approved_meteorological_object_collection (id, creation_time, time_period_gml_id, time_period_begin_position, time_period_end_position, latest_modification_time, short_info, long_info, type, forecast_time, geographic_region, signature) FROM stdin;
-weather_forecast.1              	2009-02-01 13:44:30+01	time-1                                                                                                                          	2009-02-02 13:00:00+01	2009-02-03 13:00:00+01	2009-02-01 13:44:30+01	A weather forecast                                                                                                              	One cold front and one warm front insede a weather forecast                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     	WeatherForecast                 	2009-02-01 13:44:30+01	geographic_region.1             	1
+COPY approved_meteorological_object_collection (creation_time, time_period_gml_id, time_period_begin_position, time_period_end_position, latest_modification_time, short_info, long_info, type, forecast_time, id) FROM stdin;
+2012-02-10 13:44:30+01	time-1                                                                                                                          	2009-02-02 13:00:00+01	2009-02-03 13:00:00+01	2009-02-01 13:44:30+01	previsioni di Milano                                                                                                            	One cold front and one warm front insede a weather forecast                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     	WeatherForecast                 	2009-02-01 13:44:30+01	1
+2009-02-01 13:44:30+01	time.1                                                                                                                          	2009-02-02 13:00:00+01	2009-02-03 13:00:00+01	\N	\N	\N	MeteorologicalAnalysis          	2009-02-01 13:44:30+01	2
+2012-02-12 13:44:30+01	valid-time.2                                                                                                                    	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	previsioni di Torino                                                                                                            	\N	WeatherForecast                 	2009-02-01 13:44:30+01	4
+2012-02-11 13:44:30+01	valid-time.2                                                                                                                    	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	previsioni di Roma                                                                                                              	\N	WeatherForecast                 	2009-02-01 13:44:30+01	3
+\.
+
+
+--
+-- Data for Name: base_storm; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY base_storm (id, associated, creation_time, latest_modification_time, short_info, long_info, time_interpolation, control_point, priority, radius, radius_uom, rain_phase, approx_rain_fall, rain_fall_uom, is_thunderstorm, type) FROM stdin;
+1	1	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	mesolow                                                                                                                         	Una zona di bassa pressione                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     	2	01010000205E0900004703780B246C51400612143FC6BC2640	3	2.5	chilometri                      	freezing-precipitation          	7.5	mm                              	f	ConvectiveStorm 
+11	1	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	a                                                                                                                               	b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               	2	01010000205E0900004703780B246C51400612143FC6BC2640	3	2.5	chilometri                      	freezing-precipitation          	2	mm                              	t	Storm           
 \.
 
 
@@ -14027,9 +14537,38 @@ COPY channel_satellite_image (satellite_image_id, channel) FROM stdin;
 -- Data for Name: cloud_area; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY cloud_area (id, polygon) FROM stdin;
-ca.1                                                            	01030000000200000005000000000000000000544000000000000024C0000000000080544000000000000024C000000000000052409A999999991936C00000000000405440CDCCCCCCCC0C45C0000000000000544000000000000024C00500000037894160E5984F40F241CF66D5A71EC08BFD65F7E4994F40B4C876BE9F9A1DC0FE43FAEDEBA04F405F07CE19511A1DC0C139234A7BA34F40F9A067B3EAB31CC037894160E5984F40F241CF66D5A71EC0
-ca.2                                                            	01030000000200000005000000000000000000544000000000000024C0000000000080544000000000000024C00000000000005240CDCCCCCCCC0C40C00000000000405440CDCCCCCCCC0C45C0000000000000544000000000000024C00500000037894160E5984F40F241CF66D5A71EC08BFD65F7E4994F40B4C876BE9F9A1DC0FE43FAEDEBA04F405F07CE19511A1DC0C139234A7BA34F40F9A067B3EAB31CC037894160E5984F40F241CF66D5A71EC0
+COPY cloud_area (id, creation_time, latest_modification_time, short_info, long_info, control_surface, cloud_type, cover_percent, associated, region_reference, scheme, elevation, time_interpolation) FROM stdin;
+2	2009-02-01 13:44:30+01	\N	Area nuvolosa interna                                                                                                           	\N	01030000205E0900000100000004000000B91AD99596734940CBD765F84F8749407C7E18213C0648409430D3F6AF4E4F408FFAEB1516EA46405D8940F50F5A4D40B91AD99596734940CBD765F84F874940	CB      	0.35999999999999999	\N	\N	\N	\N	\N
+1	2009-02-01 13:44:30+01	\N	Area nuvolosa                                                                                                                   	Descrizione di Una CloudArea composta da due aree interne                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       	01030000205E090000020000000500000037894160E5984F40F241CF66D5A71EC08BFD65F7E4994F40B4C876BE9F9A1DC0FE43FAEDEBA04F405F07CE19511A1DC0C139234A7BA34F40F9A067B3EAB31CC037894160E5984F40F241CF66D5A71EC00500000037894160E5984F40F241CF66D5A71EC08BFD65F7E4994F40E7FBA9F1D2CD1CC0FE43FAEDEB204F405F07CE19511A1DC0C139234A7BA34F40F9A067B3EAB31CC037894160E5984F40F241CF66D5A71EC0	CB      	0.56000000000000005	1	\N	\N	\N	\N
+\.
+
+
+--
+-- Data for Name: connection_point; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY connection_point (id, s_point) FROM stdin;
+1	01010000205E09000037894160E5984F40F241CF66D5A71EC0
+2	01010000205E090000DD24068195632A407DD0B359F5A93BC0
+\.
+
+
+--
+-- Data for Name: contains; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY contains (id_exterior, id_interior) FROM stdin;
+1	2
+\.
+
+
+--
+-- Data for Name: definition_reference; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY definition_reference (id, scheme, value) FROM stdin;
+1	ogc     	urn:metobject:gml:fi:fmi:                                                                                                       
+2	ogc     	urn:metobject:gml:fi:fmi:2                                                                                                      
 \.
 
 
@@ -14037,9 +14576,8 @@ ca.2                                                            	010300000002000
 -- Data for Name: elevation; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY elevation (gml_id, uom, elevation_value, lower_elevation_value, upper_elevation_value, id) FROM stdin;
-el.2                                                                                                                            	m                               	\N	1800	2000	1
-el.1                                                                                                                            	km                              	1.6000000000000001	\N	\N	2
+COPY elevation (uom, lower_elevation_value, upper_elevation_value, id) FROM stdin;
+m                               	1.8	2.1000000000000001	1
 \.
 
 
@@ -14049,6 +14587,8 @@ el.1                                                                            
 
 COPY geographic_region (id, localized_name, region_id, authority) FROM stdin;
 1	Nord Italia                                                                                                                     	n-i                                                             	urn:someauthority:ItalyRegion                                   
+2	lombardia                                                                                                                       	ita-lmb                                                         	urn:someauthority:worldregion                                   
+7	Asia-s                                                                                                                          	a-s2                                                            	urn:someauthority:worldregion                                   
 \.
 
 
@@ -14061,11 +14601,54 @@ COPY geometry_columns (f_table_catalog, f_table_schema, f_table_name, f_geometry
 
 
 --
+-- Data for Name: is_located_by; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY is_located_by (id_obj, id_geographic_region) FROM stdin;
+1	1
+1	2
+2	2
+3	1
+4	1
+\.
+
+
+--
+-- Data for Name: met_obj_has_conn_p; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY met_obj_has_conn_p (id_obj, id_point) FROM stdin;
+1	1
+1	2
+\.
+
+
+--
 -- Data for Name: meteorological_analysis; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY meteorological_analysis (gml_id, geographic_region, analysis_time) FROM stdin;
-1	geographic_region.1             	2009-02-02 13:00:00+01
+COPY meteorological_analysis (id, analysis_time, id_obj) FROM stdin;
+1	2009-02-02 13:00:00+01	1
+\.
+
+
+--
+-- Data for Name: meteorological_analysis_located_by; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY meteorological_analysis_located_by (id_meteorological_analysis, id_geographic_region) FROM stdin;
+1	1
+1	2
+\.
+
+
+--
+-- Data for Name: numerical_model_located_by; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY numerical_model_located_by (id_numerical_model, id_geographic_region) FROM stdin;
+1	1
+1	2
 \.
 
 
@@ -14073,8 +14656,45 @@ COPY meteorological_analysis (gml_id, geographic_region, analysis_time) FROM std
 -- Data for Name: numerical_model_run_forecast; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY numerical_model_run_forecast (id, geographic_region, analysis_time, result_time, gml_validity_time, model_identifier, model_specifier, model_gml_id, validity_time_begin, validity_time_end) FROM stdin;
-1	geographic_region.1             	2009-02-01 01:00:00+01	2009-03-01 01:00:00+01	validity_time.1                 	Hirlam                                                                                                                          	RCR                                                                                                                             	model.1                         	2009-02-01 01:00:00+01	2009-02-02 01:00:00+01
+COPY numerical_model_run_forecast (id, analysis_time, result_time, gml_validity_time, model_identifier, model_specifier, model_gml_id, validity_time_begin, validity_time_end, id_obj) FROM stdin;
+1	2009-02-01 01:00:00+01	2009-03-01 01:00:00+01	validity_time.1                 	Hirlam                                                                                                                          	RCR                                                                                                                             	model.1                         	2009-02-01 01:00:00+01	2009-02-02 01:00:00+01	1
+\.
+
+
+--
+-- Data for Name: occluded_front; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY occluded_front (creation_time, latest_modification_time, short_info, long_info, control_curve, associated, id, time_interpolation, elevation, stationary) FROM stdin;
+2009-02-02 13:00:00+01	2009-02-02 13:00:00+01	s_info                                                                                                                          	l_info                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          	01020000205E0900000400000037894160E5984F40F241CF66D5A71EC08BFD65F7E4994F40B4C876BE9F9A1DC0FE43FAEDEBA04F405F07CE19511A1DC0C139234A7BA34F40F9A067B3EAB31CC0	1	1	2	1	t
+\.
+
+
+--
+-- Data for Name: point_meteorological_symbol; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY point_meteorological_symbol (id, type, associated, creation_time, latest_modification_time, short_info, long_info, time_interpolation, control_point, priority, radius, radius_uom, localized_symbol_name) FROM stdin;
+1	DirectionalMeteorologicalSymbol 	1	2009-02-01 13:44:30+01	2009-02-01 13:44:30+01	pointMS                                                                                                                         	\N	2	01010000005C8FC2F528DC2440CDCCCCCCCCCC2540	\N	\N	\N	sy                                                                                                                              
+\.
+
+
+--
+-- Data for Name: point_ms_has_definition_reference; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY point_ms_has_definition_reference (id_point_ms, id_definition_reference) FROM stdin;
+1	1
+1	2
+\.
+
+
+--
+-- Data for Name: prova; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY prova (k, shape) FROM stdin;
+1	01080000000300000000000000000000000000000000000000000000000000F03F000000000000F03F000000000000F03F0000000000000000
 \.
 
 
@@ -14082,8 +14702,8 @@ COPY numerical_model_run_forecast (id, geographic_region, analysis_time, result_
 -- Data for Name: radar_image; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY radar_image (id, instrument, point_gml_id, centre) FROM stdin;
-1	type-5                                                                                                                          	centre.1                                                                                                                        	01010000205E090000C139234A7BA34F40F9A067B3EAB31CC0
+COPY radar_image (id, instrument, point_gml_id, centre, id_obj) FROM stdin;
+1	type-5                                                                                                                          	centre.1                                                                                                                        	01010000205E090000C139234A7BA34F40F9A067B3EAB31CC0	1
 \.
 
 
@@ -14091,8 +14711,8 @@ COPY radar_image (id, instrument, point_gml_id, centre) FROM stdin;
 -- Data for Name: satellite_image_; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY satellite_image_ (id, instrument, reference_time) FROM stdin;
-1	satellite-22                                                                                                                    	2009-02-01 01:00:00+01
+COPY satellite_image_ (id, instrument, reference_time, id_obj) FROM stdin;
+1	satellite-22                                                                                                                    	2009-02-01 01:00:00+01	1
 \.
 
 
@@ -17854,59 +18474,64 @@ COPY spatial_ref_sys (srid, auth_name, auth_srid, srtext, proj4text) FROM stdin;
 
 
 --
+-- Data for Name: surface_precipitation_area; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY surface_precipitation_area (id, creation_time, latest_modification_time, short_info, long_info, control_surface, associated, region_reference, scheme, elevation, time_interpolation, rain_phase, continuity, showeriness, approx_rain_fall, rain_fall_uom) FROM stdin;
+1	2009-02-02 13:00:00+01	2009-02-02 13:00:00+01	\N	area di precipitazioni                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          	0103000000010000000400000000000000000026400000000000000040000000000000284000000000000028400000000000002A40000000000000404000000000000026400000000000000040	1	lz                                                                                                                              	ogc     	\N	\N	\N	\N	\N	\N	\N
+\.
+
+
+--
 -- Data for Name: time_interpolation; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY time_interpolation (gml_id, id, unit, radix, factor, value, method) FROM stdin;
-ti.1                                                                                                                            	1	day                                                             	10	5	7.5999999999999996	nearest-neighbour               
+COPY time_interpolation (id, unit, radix, factor, value, method) FROM stdin;
+2	day                                                             	5	10	7.5999999999999996	nearest-neighbour               
 \.
 
 
 --
--- Data for Name: uncertainty_area; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: weather_forecast_r; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY uncertainty_area (gml_id, geometry) FROM stdin;
-uncertArea-1                                                                                                                    	01030000000200000005000000000000000000544000000000000024C0000000000080544000000000000024C000000000000052409A999999991936C00000000000405440CDCCCCCCCC0C45C0000000000000544000000000000024C00500000037894160E5984F40F241CF66D5A71EC08BFD65F7E4994F40B4C876BE9F9A1DC0FE43FAEDEBA04F405F07CE19511A1DC0C139234A7BA34F40F9A067B3EAB31CC037894160E5984F40F241CF66D5A71EC0
+COPY weather_forecast_r (id, analysis_time, result_time, gml_validity_time, validity_time_begin, validity_time_end, id_obj) FROM stdin;
+1	2009-02-01 01:00:00+01	2009-03-01 01:00:00+01	validity_time.1                 	2009-02-01 01:00:00+01	2009-02-02 01:00:00+01	1
 \.
 
 
 --
--- Data for Name: uses; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: weather_forecast_r_located_by; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY uses (id_approved_meteorological_object_collection, id_used_reference_data) FROM stdin;
-weather_forecast.1              	numerical_model_run_forecast.1                                  
-weather_forecast.1              	radar_image.1                                                   
-weather_forecast.1              	weather_forecast_reference.1                                    
-weather_forecast.1              	meteorological_analysis.1                                       
-weather_forecast.1              	satellite_image_reference.1                                     
+COPY weather_forecast_r_located_by (id_weather_forecast_r, id_geographic_region) FROM stdin;
+1	1
+1	2
 \.
 
 
 --
--- Data for Name: weather_forecast_reference; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY weather_forecast_reference (id, geographic_region, analysis_time, result_time, gml_validity_time, validity_time_begin, validity_time_end) FROM stdin;
-1	geographic_region.1             	2009-02-01 01:00:00+01	2009-03-01 01:00:00+01	validity_time.1                 	2009-02-01 01:00:00+01	2009-02-02 01:00:00+01
-\.
-
-
---
--- Name: AbstractLineObject_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: abstract_line_object_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY abstract_line_object
-    ADD CONSTRAINT "AbstractLineObject_pkey" PRIMARY KEY (gml_id);
+    ADD CONSTRAINT abstract_line_object_pkey PRIMARY KEY (id);
 
 
 --
--- Name: approval_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: abstract_pressure_center_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY abstract_pressure_center
+    ADD CONSTRAINT abstract_pressure_center_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: approval_info_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY approval_info
-    ADD CONSTRAINT approval_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT approval_info_pkey PRIMARY KEY (id);
 
 
 --
@@ -17934,11 +18559,27 @@ ALTER TABLE ONLY cloud_area
 
 
 --
--- Name: elevation_gml_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: contains_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
-ALTER TABLE ONLY elevation
-    ADD CONSTRAINT elevation_gml_id_key UNIQUE (gml_id);
+ALTER TABLE ONLY contains
+    ADD CONSTRAINT contains_pkey PRIMARY KEY (id_exterior, id_interior);
+
+
+--
+-- Name: convective_storm_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY base_storm
+    ADD CONSTRAINT convective_storm_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: definition_reference_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY definition_reference
+    ADD CONSTRAINT definition_reference_pkey PRIMARY KEY (id);
 
 
 --
@@ -17966,11 +18607,43 @@ ALTER TABLE ONLY geometry_columns
 
 
 --
+-- Name: is_located_by_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY is_located_by
+    ADD CONSTRAINT is_located_by_pkey PRIMARY KEY (id_obj, id_geographic_region);
+
+
+--
+-- Name: met_obj_has_conn_p_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY met_obj_has_conn_p
+    ADD CONSTRAINT met_obj_has_conn_p_pkey PRIMARY KEY (id_obj, id_point);
+
+
+--
+-- Name: meteorological_analysis_located_by_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY meteorological_analysis_located_by
+    ADD CONSTRAINT meteorological_analysis_located_by_pkey PRIMARY KEY (id_meteorological_analysis, id_geographic_region);
+
+
+--
 -- Name: meteorological_analysis_reference_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY meteorological_analysis
-    ADD CONSTRAINT meteorological_analysis_reference_pkey PRIMARY KEY (gml_id);
+    ADD CONSTRAINT meteorological_analysis_reference_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: numerical_model_located_by_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY numerical_model_located_by
+    ADD CONSTRAINT numerical_model_located_by_pkey PRIMARY KEY (id_numerical_model, id_geographic_region);
 
 
 --
@@ -17979,6 +18652,38 @@ ALTER TABLE ONLY meteorological_analysis
 
 ALTER TABLE ONLY numerical_model_run_forecast
     ADD CONSTRAINT numerical_model_run_forecast_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: occluded_front_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY occluded_front
+    ADD CONSTRAINT occluded_front_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: oint_ms_has_definition_reference_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY point_ms_has_definition_reference
+    ADD CONSTRAINT oint_ms_has_definition_reference_pkey PRIMARY KEY (id_point_ms, id_definition_reference);
+
+
+--
+-- Name: point_meteorological_symbol_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY point_meteorological_symbol
+    ADD CONSTRAINT point_meteorological_symbol_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: prova_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY prova
+    ADD CONSTRAINT prova_pkey PRIMARY KEY (k);
 
 
 --
@@ -17998,6 +18703,14 @@ ALTER TABLE ONLY satellite_image_
 
 
 --
+-- Name: shared_point_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY connection_point
+    ADD CONSTRAINT shared_point_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: spatial_ref_sys_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -18006,11 +18719,11 @@ ALTER TABLE ONLY spatial_ref_sys
 
 
 --
--- Name: time_interpolation_app_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: surface_precipitation_area_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
-ALTER TABLE ONLY time_interpolation
-    ADD CONSTRAINT time_interpolation_app_key UNIQUE (gml_id);
+ALTER TABLE ONLY surface_precipitation_area
+    ADD CONSTRAINT surface_precipitation_area_pkey PRIMARY KEY (id);
 
 
 --
@@ -18022,14 +18735,6 @@ ALTER TABLE ONLY time_interpolation
 
 
 --
--- Name: uncertainty_area_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY uncertainty_area
-    ADD CONSTRAINT uncertainty_area_pkey PRIMARY KEY (gml_id);
-
-
---
 -- Name: usages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -18038,33 +18743,34 @@ ALTER TABLE ONLY approval_usage
 
 
 --
--- Name: uses_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: weather_forecast_r_located_by_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
-ALTER TABLE ONLY uses
-    ADD CONSTRAINT uses_pkey PRIMARY KEY (id_approved_meteorological_object_collection, id_used_reference_data);
+ALTER TABLE ONLY weather_forecast_r_located_by
+    ADD CONSTRAINT weather_forecast_r_located_by_pkey PRIMARY KEY (id_weather_forecast_r, id_geographic_region);
 
 
 --
 -- Name: weather_forecast_reference_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
-ALTER TABLE ONLY weather_forecast_reference
+ALTER TABLE ONLY weather_forecast_r
     ADD CONSTRAINT weather_forecast_reference_pkey PRIMARY KEY (id);
 
 
 --
--- Name: fki_approvation; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: index_on_curves; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
-CREATE INDEX fki_approvation ON approval_info USING btree (id_object_approved);
+CREATE INDEX index_on_curves ON abstract_line_object USING gist (control_curve);
 
 
 --
--- Name: fki_approved_for; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: abstract_line_object_associated_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-CREATE INDEX fki_approved_for ON approval_usage USING btree (approval);
+ALTER TABLE ONLY abstract_line_object
+    ADD CONSTRAINT abstract_line_object_associated_fkey FOREIGN KEY (associated) REFERENCES approved_meteorological_object_collection(id);
 
 
 --
@@ -18072,7 +18778,7 @@ CREATE INDEX fki_approved_for ON approval_usage USING btree (approval);
 --
 
 ALTER TABLE ONLY abstract_line_object
-    ADD CONSTRAINT abstract_line_object_elevation_fkey FOREIGN KEY (elevation) REFERENCES elevation(gml_id);
+    ADD CONSTRAINT abstract_line_object_elevation_fkey FOREIGN KEY (elevation) REFERENCES elevation(id);
 
 
 --
@@ -18080,15 +18786,271 @@ ALTER TABLE ONLY abstract_line_object
 --
 
 ALTER TABLE ONLY abstract_line_object
-    ADD CONSTRAINT abstract_line_object_time_interpolation_fkey FOREIGN KEY (time_interpolation) REFERENCES time_interpolation(gml_id);
+    ADD CONSTRAINT abstract_line_object_time_interpolation_fkey FOREIGN KEY (time_interpolation) REFERENCES time_interpolation(id);
 
 
 --
--- Name: approved_for; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: abstract_pressure_center_associated_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY abstract_pressure_center
+    ADD CONSTRAINT abstract_pressure_center_associated_fkey FOREIGN KEY (associated) REFERENCES approved_meteorological_object_collection(id);
+
+
+--
+-- Name: abstract_pressure_center_time_interpolation_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY abstract_pressure_center
+    ADD CONSTRAINT abstract_pressure_center_time_interpolation_fkey FOREIGN KEY (time_interpolation) REFERENCES time_interpolation(id);
+
+
+--
+-- Name: approval_info_id_object_approved_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY approval_info
+    ADD CONSTRAINT approval_info_id_object_approved_fkey FOREIGN KEY (id_object_approved) REFERENCES approved_meteorological_object_collection(id);
+
+
+--
+-- Name: approval_usage_approval_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY approval_usage
-    ADD CONSTRAINT approved_for FOREIGN KEY (approval) REFERENCES approval_info(id);
+    ADD CONSTRAINT approval_usage_approval_fkey FOREIGN KEY (approval) REFERENCES approval_info(id);
+
+
+--
+-- Name: channel_satellite_image_satellite_image_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY channel_satellite_image
+    ADD CONSTRAINT channel_satellite_image_satellite_image_id_fkey FOREIGN KEY (satellite_image_id) REFERENCES satellite_image_(id);
+
+
+--
+-- Name: cloud_area_associated_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY cloud_area
+    ADD CONSTRAINT cloud_area_associated_fkey FOREIGN KEY (associated) REFERENCES approved_meteorological_object_collection(id);
+
+
+--
+-- Name: cloud_area_elevation_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY cloud_area
+    ADD CONSTRAINT cloud_area_elevation_fkey FOREIGN KEY (elevation) REFERENCES elevation(id);
+
+
+--
+-- Name: cloud_area_time_interpolation_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY cloud_area
+    ADD CONSTRAINT cloud_area_time_interpolation_fkey FOREIGN KEY (time_interpolation) REFERENCES time_interpolation(id);
+
+
+--
+-- Name: convective_storm_associated_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY base_storm
+    ADD CONSTRAINT convective_storm_associated_fkey FOREIGN KEY (associated) REFERENCES approved_meteorological_object_collection(id);
+
+
+--
+-- Name: convective_storm_time_interpolation_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY base_storm
+    ADD CONSTRAINT convective_storm_time_interpolation_fkey FOREIGN KEY (time_interpolation) REFERENCES time_interpolation(id);
+
+
+--
+-- Name: is_located_by_id_geographic_region_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY is_located_by
+    ADD CONSTRAINT is_located_by_id_geographic_region_fkey FOREIGN KEY (id_geographic_region) REFERENCES geographic_region(id);
+
+
+--
+-- Name: is_located_by_id_obj_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY is_located_by
+    ADD CONSTRAINT is_located_by_id_obj_fkey FOREIGN KEY (id_obj) REFERENCES approved_meteorological_object_collection(id);
+
+
+--
+-- Name: meteorological_analysis_located_by_id_geographic_region_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY meteorological_analysis_located_by
+    ADD CONSTRAINT meteorological_analysis_located_by_id_geographic_region_fkey FOREIGN KEY (id_geographic_region) REFERENCES geographic_region(id);
+
+
+--
+-- Name: meteorological_analysis_located_id_meteorological_analysis_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY meteorological_analysis_located_by
+    ADD CONSTRAINT meteorological_analysis_located_id_meteorological_analysis_fkey FOREIGN KEY (id_meteorological_analysis) REFERENCES meteorological_analysis(id);
+
+
+--
+-- Name: meteorological_analysis_reference_id_obj_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY meteorological_analysis
+    ADD CONSTRAINT meteorological_analysis_reference_id_obj_fkey FOREIGN KEY (id_obj) REFERENCES approved_meteorological_object_collection(id);
+
+
+--
+-- Name: numerical_model_located_by_id_geographic_region_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY numerical_model_located_by
+    ADD CONSTRAINT numerical_model_located_by_id_geographic_region_fkey FOREIGN KEY (id_geographic_region) REFERENCES geographic_region(id);
+
+
+--
+-- Name: numerical_model_located_by_id_numerical_model_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY numerical_model_located_by
+    ADD CONSTRAINT numerical_model_located_by_id_numerical_model_fkey FOREIGN KEY (id_numerical_model) REFERENCES numerical_model_run_forecast(id);
+
+
+--
+-- Name: numerical_model_run_forecast_id_obj_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY numerical_model_run_forecast
+    ADD CONSTRAINT numerical_model_run_forecast_id_obj_fkey FOREIGN KEY (id_obj) REFERENCES approved_meteorological_object_collection(id);
+
+
+--
+-- Name: occluded_front_associated_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY occluded_front
+    ADD CONSTRAINT occluded_front_associated_fkey FOREIGN KEY (associated) REFERENCES approved_meteorological_object_collection(id);
+
+
+--
+-- Name: occluded_front_elevation_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY occluded_front
+    ADD CONSTRAINT occluded_front_elevation_fkey FOREIGN KEY (elevation) REFERENCES elevation(id);
+
+
+--
+-- Name: occluded_front_time_interpolation_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY occluded_front
+    ADD CONSTRAINT occluded_front_time_interpolation_fkey FOREIGN KEY (time_interpolation) REFERENCES time_interpolation(id);
+
+
+--
+-- Name: point_meteorological_symbol_associated_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY point_meteorological_symbol
+    ADD CONSTRAINT point_meteorological_symbol_associated_fkey FOREIGN KEY (associated) REFERENCES approved_meteorological_object_collection(id);
+
+
+--
+-- Name: point_meteorological_symbol_time_interpolation_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY point_meteorological_symbol
+    ADD CONSTRAINT point_meteorological_symbol_time_interpolation_fkey FOREIGN KEY (time_interpolation) REFERENCES time_interpolation(id);
+
+
+--
+-- Name: point_ms_has_definition_reference_id_definition_reference_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY point_ms_has_definition_reference
+    ADD CONSTRAINT point_ms_has_definition_reference_id_definition_reference_fkey FOREIGN KEY (id_definition_reference) REFERENCES definition_reference(id);
+
+
+--
+-- Name: point_ms_has_definition_reference_id_point_ms_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY point_ms_has_definition_reference
+    ADD CONSTRAINT point_ms_has_definition_reference_id_point_ms_fkey FOREIGN KEY (id_point_ms) REFERENCES point_meteorological_symbol(id);
+
+
+--
+-- Name: radar_image_id_obj_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY radar_image
+    ADD CONSTRAINT radar_image_id_obj_fkey FOREIGN KEY (id_obj) REFERENCES radar_image(id);
+
+
+--
+-- Name: satellite_image__id_obj_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY satellite_image_
+    ADD CONSTRAINT satellite_image__id_obj_fkey FOREIGN KEY (id_obj) REFERENCES approved_meteorological_object_collection(id);
+
+
+--
+-- Name: surface_precipitation_area_associated_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY surface_precipitation_area
+    ADD CONSTRAINT surface_precipitation_area_associated_fkey FOREIGN KEY (associated) REFERENCES approved_meteorological_object_collection(id);
+
+
+--
+-- Name: surface_precipitation_area_elevation_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY surface_precipitation_area
+    ADD CONSTRAINT surface_precipitation_area_elevation_fkey FOREIGN KEY (elevation) REFERENCES elevation(id);
+
+
+--
+-- Name: surface_precipitation_area_time_interpolation_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY surface_precipitation_area
+    ADD CONSTRAINT surface_precipitation_area_time_interpolation_fkey FOREIGN KEY (time_interpolation) REFERENCES time_interpolation(id);
+
+
+--
+-- Name: weather_forecast_r_located_by_id_geographic_region_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY weather_forecast_r_located_by
+    ADD CONSTRAINT weather_forecast_r_located_by_id_geographic_region_fkey FOREIGN KEY (id_geographic_region) REFERENCES geographic_region(id);
+
+
+--
+-- Name: weather_forecast_r_located_by_id_weather_forecast_r_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY weather_forecast_r_located_by
+    ADD CONSTRAINT weather_forecast_r_located_by_id_weather_forecast_r_fkey FOREIGN KEY (id_weather_forecast_r) REFERENCES weather_forecast_r(id);
+
+
+--
+-- Name: weather_forecast_reference_id_obj_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY weather_forecast_r
+    ADD CONSTRAINT weather_forecast_reference_id_obj_fkey FOREIGN KEY (id_obj) REFERENCES approved_meteorological_object_collection(id);
 
 
 --

@@ -1,0 +1,13 @@
+<dataStore>
+    <id>womlswo_TropicalCyclone_datastore</id>
+    <name>womlswo_TropicalCyclone</name>
+    <enabled>true</enabled>
+    <workspace>
+        <id>womlswo_workspace</id>
+    </workspace>
+    <connectionParameters>
+        <entry key="namespace">http://xml.fmi.fi/namespace/woml/swo/2011/11/15</entry>
+        <entry key="url">file:workspaces/womlswo/womlswo_TropicalCyclone/womlswo_TropicalCyclone.xml</entry>
+        <entry key="dbtype">app-schema</entry>
+    </connectionParameters>
+</dataStore>

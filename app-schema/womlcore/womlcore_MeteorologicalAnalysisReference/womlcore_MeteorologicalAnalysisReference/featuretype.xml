@@ -1,0 +1,30 @@
+<featureType>
+    <id>womlcore_MeteorologicalAnalysisReference_featuretype</id>
+    <name>MeteorologicalAnalysisReference</name>
+    <nativeName>MeteorologicalAnalysisReference</nativeName>
+    <namespace>
+        <id>womlcore_namespace</id>
+    </namespace>
+    <title>...</title>
+    <abstract>...</abstract>
+    <srs>EPSG:4326</srs>
+    <latLonBoundingBox>
+        <minx>-180</minx>
+        <maxx>180</maxx>
+        <miny>-90</miny>
+        <maxy>90</maxy>
+        <crs>EPSG:4326</crs>
+    </latLonBoundingBox>
+    <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+    <enabled>false</enabled>
+    <metadata>
+        <entry key="kml.regionateFeatureLimit">10</entry>
+        <entry key="indexingEnabled">false</entry>
+        <entry key="cachingEnabled">false</entry>
+    </metadata>
+    <store class="dataStore">
+        <id>womlcore_MeteorologicalAnalysisReference_datastore</id>
+    </store>
+    <maxFeatures>0</maxFeatures>
+    <numDecimals>0</numDecimals>
+</featureType>

@@ -5,8 +5,8 @@
     <namespace>
         <id>womlcore_namespace</id>
     </namespace>
-    <title>... TITLE ...</title>
-    <abstract>... ABSTRACT ...</abstract>
+    <title>Previsione meteo</title>
+    <abstract>Questo tipo rappresenta una previsione</abstract>
     <srs>EPSG:4326</srs>
     <latLonBoundingBox>
         <minx>-180</minx>

@@ -1,0 +1,17 @@
+<layer>
+  <id>womlcore_GeographicRegion_layer</id>
+  <name>GeographicRegion</name>
+  <path>/</path>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <name>polygon</name>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>womlcore_GeographicRegion_featuretype</id>
+  </resource>
+  <enabled>true</enabled>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+</layer>

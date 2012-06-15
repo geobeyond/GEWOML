@@ -60,36 +60,23 @@
                         womlcore:Elevation
                     </targetAttribute>
                     <idExpression>
-                        <OCQL>gml_id</OCQL>
+                        <OCQL>getId()</OCQL>
                     </idExpression>
                 </AttributeMapping>
 
 
-     <!--
-                <AttributeMapping>
-                    <targetAttribute>
-                        womlcore:Elevation/womlcore:value
-                    </targetAttribute>
-                    <sourceExpression>
-                       <OCQL>if_then_else(isNull(elevation_value)==false,elevation_value)</OCQL>
-                      !-a- <OCQL>elevation_value</OCQL> -a-
-                    </sourceExpression>
-                    <ClientProperty>
-                        <name>uom</name>
-                        <value></value>
-                    </ClientProperty>
-                </AttributeMapping>
-                
-                -->
 
-<!--
                 <AttributeMapping>
                     <targetAttribute>
                         womlcore:Elevation/womlcore:valueLowerLimit
                     </targetAttribute>
                     <sourceExpression>
-                        <OCQL>if_then_else(isNull(elevation_value),lower_elevation_value)</OCQL>
+                        <inputAttribute>lower_elevation_value</inputAttribute>
                     </sourceExpression>
+                    <ClientProperty>
+                        <name>uom</name>
+                        <value>uom</value>
+                    </ClientProperty>
                 </AttributeMapping>
 
                 <AttributeMapping>
@@ -97,11 +84,15 @@
                         womlcore:Elevation/womlcore:valueUpperLimit
                     </targetAttribute>
                     <sourceExpression>
-                        <OCQL>if_then_else(isNull(elevation_value),upper_elevation_value)</OCQL>
+                        <OCQL>upper_elevation_value</OCQL>
                     </sourceExpression>
+                    <ClientProperty>
+                        <name>uom</name>
+                        <value>uom</value>
+                    </ClientProperty>
                 </AttributeMapping>
 
--->
+
 
             </attributeMappings>
         </FeatureTypeMapping>

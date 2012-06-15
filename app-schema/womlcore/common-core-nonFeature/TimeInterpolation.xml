@@ -61,7 +61,7 @@
                         womlcore:TimeInterpolation
                     </targetAttribute>
                     <idExpression>
-                        <OCQL>gml_id</OCQL>
+                        <OCQL>getId()</OCQL>
                     </idExpression>   
                 </AttributeMapping>
 

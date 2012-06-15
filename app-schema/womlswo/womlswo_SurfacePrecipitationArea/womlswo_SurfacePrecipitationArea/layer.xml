@@ -1,0 +1,17 @@
+<layer>
+  <id>SurfacePrecipitationArea_layer</id>
+  <name>womlswo_SurfacePrecipitationArea</name>
+  <path>/</path>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <name>polygon</name>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>womlswo_SurfacePrecipitationArea_featuretype</id>
+  </resource>
+  <enabled>true</enabled>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+</layer>
